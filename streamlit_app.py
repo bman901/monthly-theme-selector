@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-# Load secrets securely from Streamlit Cloud
+# Airtable config
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
 AIRTABLE_BASE_ID = st.secrets["AIRTABLE_BASE_ID"]
 AIRTABLE_TABLE_NAME = "MonthlyThemes"
@@ -11,6 +11,7 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
+# Airtable fetch
 def fetch_pending_themes(segment):
     this_month = datetime.now().strftime("%B %Y")
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
@@ -24,19 +25,18 @@ def fetch_pending_themes(segment):
         return []
     return response.json().get("records", [])
 
+# Airtable update
 def update_status(record_id):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-    data = {
-        "fields": {
-            "Status": "selected"
-        }
-    }
+    data = {"fields": {"Status": "selected"}}
     response = requests.patch(url, json=data, headers=HEADERS)
     return response.status_code == 200
 
+# Page setup
 st.set_page_config(page_title="Theme Selector", layout="wide")
 st.title("📬 Monthly Email Theme Selector")
 
+# --- THEME SELECTORS ---
 for segment in ["Pre-Retiree", "Retiree"]:
     st.header(segment)
     records = fetch_pending_themes(segment)
@@ -50,7 +50,8 @@ for segment in ["Pre-Retiree", "Retiree"]:
         for r in records
     }
 
-    choice = st.radio(f"Select a theme for {segment}:", list(options.keys()), key=segment)
+    choice = st.radio(
+        f"Select a theme for {segment}:", list(options.keys()), key=segment)
 
     if st.button(f"✅ Confirm selection for {segment}", key=f"{segment}_confirm"):
         selected_id = options[choice]
@@ -59,11 +60,12 @@ for segment in ["Pre-Retiree", "Retiree"]:
         else:
             st.error("Failed to update Airtable.")
 
+# --- MANUAL ENTRY ---
 st.markdown("---")
 st.header("✍️ Manually Create a Theme")
 
 with st.form("manual_theme_form"):
-    segment = st.selectbox("Segment", ["Pre-Retiree", "Retiree"])
+    manual_segment = st.selectbox("Segment", ["Pre-Retiree", "Retiree"])
     subject = st.text_input("Subject Line")
     description = st.text_area("Description (1–2 sentences)")
     submitted = st.form_submit_button("💾 Save Theme")
@@ -72,24 +74,19 @@ with st.form("manual_theme_form"):
         if not subject or not description:
             st.error("Please complete both the subject and description.")
         else:
-            # Submit to Airtable
-            url = f"https://api.airtable.com/v0/{st.secrets['AIRTABLE_BASE_ID']}/MonthlyThemes"
-            headers = {
-                "Authorization": f"Bearer {st.secrets['AIRTABLE_PAT']}",
-                "Content-Type": "application/json"
-            }
+            url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
             payload = {
                 "fields": {
-                    "Segment": segment,
+                    "Segment": manual_segment,
                     "Subject": subject,
                     "Description": description,
-                    "Status": "pending",  # ✅ Now treated the same as AI-generated themes
+                    "Status": "pending",
                     "Month": datetime.now().strftime("%B %Y")
                 }
             }
-            res = requests.post(url, json={"records": [payload]}, headers=headers)
+            res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
             if res.status_code == 200:
-                st.success("🎉 Theme saved successfully! Refresh the page to see it above.")
+                st.success("🎉 Theme saved successfully!")
+                st.experimental_rerun()  # Auto-refresh to show new theme
             else:
                 st.error(f"⚠️ Failed to save theme: {res.text}")
-
