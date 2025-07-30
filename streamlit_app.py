@@ -77,6 +77,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
         selected_id = options[choice]
         if update_status(segment, selected_id):
             st.success("Selection saved!")
+            st.rerun()
         else:
             st.error("Failed to update Airtable.")
 
