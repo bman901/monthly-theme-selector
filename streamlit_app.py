@@ -126,7 +126,7 @@ def fetch_selected_theme(segment):
     return response.json().get("records", [])
 
 for segment in ["Pre-Retiree", "Retiree"]:
-    selected = fetch_selected_themes(segment)
+    selected = fetch_selected_theme(segment)
     selected = [r for r in selected if r["fields"].get("Status") == "selected"]
 
     if not selected:
