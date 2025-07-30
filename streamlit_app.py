@@ -112,8 +112,21 @@ personas = {
 st.markdown("---")
 st.header("📝 Generate and Review Email Drafts")
 
+def fetch_selected_theme(segment):
+    this_month = datetime.now().strftime("%B %Y")
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
+    params = {
+        "filterByFormula": f"AND(Segment = '{segment}', Status = 'selected', Month = '{this_month}')",
+        "pageSize": 1
+    }
+    response = requests.get(url, headers=HEADERS, params=params)
+    if response.status_code != 200:
+        st.error(f"Error fetching selected theme for {segment}: {response.text}")
+        return []
+    return response.json().get("records", [])
+
 for segment in ["Pre-Retiree", "Retiree"]:
-    selected = fetch_pending_themes(segment)
+    selected = fetch_selected_themes(segment)
     selected = [r for r in selected if r["fields"].get("Status") == "selected"]
 
     if not selected:
