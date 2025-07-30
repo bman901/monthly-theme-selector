@@ -58,3 +58,38 @@ for segment in ["Pre-Retiree", "Retiree"]:
             st.success("Selection saved!")
         else:
             st.error("Failed to update Airtable.")
+
+st.markdown("---")
+st.header("✍️ Manually Create a Theme")
+
+with st.form("manual_theme_form"):
+    segment = st.selectbox("Segment", ["Pre-Retiree", "Retiree"])
+    subject = st.text_input("Subject Line")
+    description = st.text_area("Description (1–2 sentences)")
+    submitted = st.form_submit_button("💾 Save Theme")
+
+    if submitted:
+        if not subject or not description:
+            st.error("Please complete both the subject and description.")
+        else:
+            # Submit to Airtable
+            url = f"https://api.airtable.com/v0/{st.secrets['AIRTABLE_BASE_ID']}/MonthlyThemes"
+            headers = {
+                "Authorization": f"Bearer {st.secrets['AIRTABLE_PAT']}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "fields": {
+                    "Segment": segment,
+                    "Subject": subject,
+                    "Description": description,
+                    "Status": "pending",  # ✅ Now treated the same as AI-generated themes
+                    "Month": datetime.now().strftime("%B %Y")
+                }
+            }
+            res = requests.post(url, json={"records": [payload]}, headers=headers)
+            if res.status_code == 200:
+                st.success("🎉 Theme saved successfully! Refresh the page to see it above.")
+            else:
+                st.error(f"⚠️ Failed to save theme: {res.text}")
+
