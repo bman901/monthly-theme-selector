@@ -87,6 +87,6 @@ with st.form("manual_theme_form"):
             res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
             if res.status_code == 200:
                 st.success("🎉 Theme saved successfully!")
-                st.experimental_rerun()  # Auto-refresh to show new theme
+                st.rerun()  # Auto-refresh to show new theme
             else:
                 st.error(f"⚠️ Failed to save theme: {res.text}")
