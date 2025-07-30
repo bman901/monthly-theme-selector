@@ -29,11 +29,28 @@ def fetch_pending_themes(segment):
     return response.json().get("records", [])
 
 # Airtable update
-def update_status(record_id):
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-    data = {"fields": {"Status": "selected"}}
-    response = requests.patch(url, json=data, headers=HEADERS)
-    return response.status_code == 200
+def update_status(segment, new_record_id):
+    current_month = datetime.now().strftime("%B %Y")
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
+    params = {
+        "filterByFormula": f"AND(Segment = '{segment}', Status = 'selected', Month = '{current_month}')"
+    }
+    response = requests.get(url, headers=HEADERS, params=params)
+    if response.status_code == 200:
+        for record in response.json().get("records", []):
+            record_id = record["id"]
+            if record_id != new_record_id:
+                requests.patch(
+                    f"{url}/{record_id}",
+                    headers=HEADERS,
+                    json={"fields": {"Status": "pending"}}
+                )
+
+    # Now select the new theme
+    payload = {"fields": {"Status": "selected"}}
+    res = requests.patch(f"{url}/{new_record_id}", json=payload, headers=HEADERS)
+    return res.status_code == 200
+
 
 # Page setup
 st.set_page_config(page_title="Theme Selector", layout="wide")
@@ -58,7 +75,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
 
     if st.button(f"✅ Confirm selection for {segment}", key=f"{segment}_confirm"):
         selected_id = options[choice]
-        if update_status(selected_id):
+        if update_status(segment, selected_id):
             st.success("Selection saved!")
         else:
             st.error("Failed to update Airtable.")
