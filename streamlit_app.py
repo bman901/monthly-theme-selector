@@ -1,6 +1,9 @@
 import streamlit as st
 import requests
 from datetime import datetime
+import openai
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Airtable config
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
@@ -90,3 +93,89 @@ with st.form("manual_theme_form"):
                 st.rerun()  # Auto-refresh to show new theme
             else:
                 st.error(f"⚠️ Failed to save theme: {res.text}")
+
+# --- GENERATE EMAILS ---
+
+# Define personas
+personas = {
+    "Pre-Retiree": (
+        "Paul and Lisa Harrington are in their late 50s in South East QLD. "
+        "They’re financially comfortable but time-poor. "
+        "They value clarity, simplicity, and confidence about the future. "
+    ),
+    "Retiree": (
+        "Alan and Margaret Rowe are in their mid to late 60s in South East QLD. "
+        "They're thoughtful, detail-focused, and value peace of mind. "
+    )
+}
+
+st.markdown("---")
+st.header("📝 Generate and Review Email Drafts")
+
+for segment in ["Pre-Retiree", "Retiree"]:
+    selected = fetch_pending_themes(segment)
+    selected = [r for r in selected if r["fields"].get("Status") == "selected"]
+
+    if not selected:
+        st.info(f"No selected theme for {segment} yet.")
+        continue
+
+    record = selected[0]  # Only one selected theme per segment
+    fields = record["fields"]
+    subject = fields["Subject"]
+    description = fields["Description"]
+    draft = fields.get("EmailDraft", "")
+    approved = fields.get("DraftApproved", False)
+    record_id = record["id"]
+
+    st.subheader(f"{segment}: {subject}")
+    st.caption(description)
+
+    if not draft:
+        if st.button(f"🪄 Generate Email Draft for {segment}"):
+            prompt = (
+                f"Write a marketing email suitable for Australian {segment.lower()} clients. "
+                f"Subject: {subject}\n"
+                f"Theme description: {description}\n"
+                f"Persona: {personas[segment]}\n\n"
+                f"The email should be informative, conversational, and have a clear 'book a call' style CTA. "
+                f"Try to deliver value and actionable items, don't make it salesy "
+                f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
+            )
+            with st.spinner("Generating email..."):
+                response = openai.ChatCompletion.create(
+                    model="gpt-4o",
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.7,
+                )
+                email_text = response.choices[0].message.content.strip()
+
+                # Update Airtable
+                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+                payload = {"fields": {"EmailDraft": email_text}}
+                res = requests.patch(url, json=payload, headers=HEADERS)
+                if res.status_code == 200:
+                    st.success("✅ Email draft saved.")
+                    st.rerun()
+                else:
+                    st.error("❌ Failed to save draft to Airtable.")
+
+    else:
+        edited_draft = st.text_area("✏️ Edit the draft below", value=draft, height=300, key=f"edit_{segment}")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button(f"💾 Save Edits for {segment}"):
+                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+                payload = {"fields": {"EmailDraft": edited_draft}}
+                res = requests.patch(url, json=payload, headers=HEADERS)
+                if res.status_code == 200:
+                    st.success("Draft updated.")
+                    st.rerun()
+        with col2:
+            if not approved and st.button(f"✅ Mark as Approved for {segment}"):
+                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+                payload = {"fields": {"DraftApproved": True}}
+                res = requests.patch(url, json=payload, headers=HEADERS)
+                if res.status_code == 200:
+                    st.success("Marked as approved.")
+                    st.rerun()
