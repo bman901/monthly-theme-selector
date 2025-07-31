@@ -236,22 +236,18 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 )
             else:
                 draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
-                if st.button(f"💾 Save Edits for {segment}"):
-                    update_airtable_fields(selected["id"], {"EmailDraft": draft})
-                    st.success("Draft saved.")
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button(f"💾 Save Edits for {segment}"):
-                    update_airtable_fields(selected["id"], {"EmailDraft": draft})
-                    st.success("Draft saved.")
-            with col2:
-                if fields.get("EmailDraft") and not fields.get("DraftApproved", False):
-                    if st.button(f"📤 Send to Shane for Approval for {segment}"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button(f"💾 Save Edits for {segment}", key=f"save_{segment}"):
                         update_airtable_fields(selected["id"], {"EmailDraft": draft})
-                        update_airtable_fields(selected["id"], {"DraftSubmitted": True})
-                        send_draft_email_to_shane(fields["Subject"], draft)
-                        st.success("Draft sent to Shane for review.")
+                        st.success("Draft saved.")
+                with col2:
+                    if fields.get("EmailDraft") and not fields.get("DraftApproved", False):
+                        if st.button(f"📤 Send to Shane for Approval for {segment}",key=f"send_{segment}"):
+                            update_airtable_fields(selected["id"], {"EmailDraft": draft})
+                            update_airtable_fields(selected["id"], {"DraftSubmitted": True})
+                            send_draft_email_to_shane(fields["Subject"], draft)
+                            st.success("Draft sent to Shane for review.")           
                     
             if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
