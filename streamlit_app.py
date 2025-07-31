@@ -138,14 +138,19 @@ def send_draft_email_to_shane(subject, draft):
 
     html_body = f"""
     <html>
-    <body>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
         <p>Hi Shane,</p>
         <p>Here's the draft email for the "<strong>{subject}</strong>" campaign:</p>
-        <pre style="font-family: monospace; white-space: pre-wrap;">{draft}</pre>
+        
+        <div style="border-left: 4px solid #4CAF50; background-color: #f9f9f9; padding: 16px; margin: 12px 0; font-size: 15px;">
+            {draft.replace('\n', '<br>')}
+        </div>
+        
         <p>
             You can approve or edit this draft here:<br>
-            <a href="https://hfp-monthly-theme-selector.streamlit.app/">Open the Streamlit App</a>
+            <a href="https://hfp-monthly-theme-selector.streamlit.app/" style="color: #1a73e8;">Open the Streamlit App</a>
         </p>
+    
         <p>– Your automated writing assistant</p>
     </body>
     </html>
