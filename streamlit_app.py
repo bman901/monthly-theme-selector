@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from openai import OpenAI
 import smtplib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 # --- SECRETS ---
@@ -130,12 +131,27 @@ def update_airtable_fields(record_id, fields):
     return requests.patch(url, json={"fields": fields}, headers=HEADERS)
 
 def send_draft_email_to_shane(subject, draft):
-    msg = MIMEText(
-        f"Hi Shane,\n\nHere's the draft email for the \"{subject}\" campaign:\n\n{draft}\n\nIf this looks good, mark it as approved in the Streamlit app.\n\n– Your automated writing assistant"
-    )
+    msg = MIMEMultipart("alternative")
     msg["Subject"] = f"Draft ready for review: {subject}"
     msg["From"] = st.secrets["SMTP_USERNAME"]
     msg["To"] = st.secrets["REVIEWER_EMAIL"]
+
+    html_body = f"""
+    <html>
+    <body>
+        <p>Hi Shane,</p>
+        <p>Here's the draft email for the "<strong>{subject}</strong>" campaign:</p>
+        <pre style="font-family: monospace; white-space: pre-wrap;">{draft}</pre>
+        <p>
+            You can approve or edit this draft here:<br>
+            <a href="https://hfp-monthly-theme-selector.streamlit.app/">Open the Streamlit App</a>
+        </p>
+        <p>– Your automated writing assistant</p>
+    </body>
+    </html>
+    """
+
+    msg.attach(MIMEText(html_body, "html"))
 
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
