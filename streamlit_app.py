@@ -185,10 +185,11 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     update_airtable_fields(selected["id"], {"EmailDraft": draft})
                     st.success("Draft saved.")
             with col2:
-                if not fields.get("DraftApproved") and st.button(f"📤 Send to Shane for Approval for {segment}"):
-                    update_airtable_fields(selected["id"], {"DraftSubmitted": True})
-                    send_draft_email_to_shane(fields["Subject"], draft)
-                    st.success("Draft sent to Shane for review.")
+                if fields.get("EmailDraft") and not fields.get("DraftApproved", False):
+                    if st.button(f"📤 Send to Shane for Approval for {segment}"):
+                        update_airtable_fields(selected["id"], {"DraftSubmitted": True})
+                        send_draft_email_to_shane(fields["Subject"], draft)
+                        st.success("Draft sent to Shane for review.")
                     
             if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
