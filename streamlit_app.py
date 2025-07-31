@@ -234,6 +234,9 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 height=300,
                 disabled=True
             )
+            if st.button(f"✏️ Edit Draft Again for {segment}", key=f"editagain_{segment}"):
+                update_airtable_fields(selected["id"], {"DraftApproved": False})
+                st.rerun()
         else:
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
             col1, col2, col3 = st.columns(3)
