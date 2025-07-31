@@ -40,32 +40,10 @@ Don't include any formatting (bold, italics, etc).
 Include a soft P.S. with a CTA.
 Most people will be in couples, but don't necessarily assume all recipients have partners — use 'if' etc. where appropriate.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
-"
-        f"Subject: {subject}
-"
-        f"Theme description: {description}
-"
-        f"Persona: {personas[segment]}
-
-"
-        f"The email should be informative, conversational, and general in nature.
-"
-        f"Try to deliver value and actionable items, don't make it salesy 
-"
-        f"Don't be specific about the persona's situation, they're intended to be general in nature 
-"
-        f"Don't overtly mention anything about their location; this is irrelevant to them 
-"
-        f"Don't include any formatting (bold, italics, etc) 
-"
-        f"Include a soft P.S. with a CTA  
-"
-        f"Most people will be in couples, but don't necessarily assume all recipients have partners, use 'if' etc. where appropriate rather than assuming 
-"
-        f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
-    )
     if extra:
-    base_prompt += f"
+        base_prompt += f"\n\nAdditional instructions: {extra}"
+    return base_prompt
+
 
 Additional instructions: {extra}"
     return base_prompt
