@@ -94,11 +94,15 @@ def generate_email_draft(subject, description, segment):
         f"Most people will be in couples, but don't necessarily assume all recepients have partners, use 'if' etc. where appropriate rather than assuming "
         f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
     )
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
+    
+    client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    
+    response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": prompt}],
+    temperature=0.7,
     )
+
     return response.choices[0].message.content.strip()
 
 def update_airtable_fields(record_id, fields):
