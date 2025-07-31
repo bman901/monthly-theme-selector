@@ -6,6 +6,7 @@ from openai import OpenAI
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import json
 
 # --- SECRETS ---
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
@@ -194,6 +195,81 @@ def send_approval_notification_to_ben(subject):
         server.login(st.secrets["SMTP_USERNAME"], st.secrets["SMTP_PASSWORD"])
         server.sendmail(msg["From"], [msg["To"]], msg.as_string())
 
+# --- MAILCHIMP LINK ---
+
+def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
+    # Mailchimp config
+    api_key = st.secrets["MAILCHIMP_API_KEY"]
+    server_prefix = st.secrets["MAILCHIMP_SERVER_PREFIX"]
+    list_id = st.secrets["MAILCHIMP_AUDIENCE_ID"]
+
+    # Segment tag ID
+    tag_id = (
+        st.secrets["MAILCHIMP_TAG_ID_PRE_RETIREES"]
+        if segment == "Pre-Retiree"
+        else st.secrets["MAILCHIMP_TAG_ID_RETIREES"]
+    )
+
+    base_url = f"https://{server_prefix}.api.mailchimp.com/3.0"
+    auth = ("anystring", api_key)  # Mailchimp uses basic auth
+
+    # Step 1: Create campaign
+    campaign_data = {
+        "type": "regular",
+        "recipients": {
+            "list_id": list_id,
+            "segment_opts": {
+                "match": "any",
+                "conditions": [
+                    {
+                        "condition_type": "StaticSegment",
+                        "field": "static_segment",
+                        "op": "eq",
+                        "value": tag_id
+                    }
+                ]
+            },
+        },
+        "settings": {
+            "subject_line": subject,
+            "title": f"{segment} Campaign - {subject}",
+            "from_name": "Hatch Financial Planning",
+            "reply_to": st.secrets["SMTP_USERNAME"],
+            "auto_footer": False
+        }
+    }
+
+    campaign_res = requests.post(
+        f"{base_url}/campaigns",
+        auth=auth,
+        json=campaign_data
+    )
+
+    if campaign_res.status_code != 200:
+        st.error("❌ Failed to create Mailchimp campaign.")
+        st.error(campaign_res.text)
+        return None
+
+    campaign_id = campaign_res.json()["id"]
+
+    # Step 2: Set campaign content
+    content_data = {
+        "plain_text": draft,
+        "html": f"<html><body><p>{draft.replace(chr(10), '<br>')}</p></body></html>"
+    }
+
+    content_res = requests.put(
+        f"{base_url}/campaigns/{campaign_id}/content",
+        auth=auth,
+        json=content_data
+    )
+
+    if content_res.status_code == 200:
+        st.success("📤 Campaign created in Mailchimp!")
+    else:
+        st.error("❌ Failed to set campaign content.")
+        st.error(content_res.text)
+
 # --- STREAMLIT APP ---
 st.set_page_config(page_title="Monthly Theme Selector", layout="wide")
 st.title("📬 Monthly Email Theme Selector")
@@ -240,6 +316,8 @@ for segment in ["Pre-Retiree", "Retiree"]:
             if st.button(f"✏️ Edit Draft Again for {segment}", key=f"editagain_{segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": False})
                 st.rerun()
+            if st.button(f"📤 Push to Mailchimp for {segment}", key=f"mailchimp_{segment}"):
+                create_mailchimp_campaign(fields["Subject"], fields["EmailDraft"], segment)
         else:
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
             col1, col2, col3 = st.columns(3)
