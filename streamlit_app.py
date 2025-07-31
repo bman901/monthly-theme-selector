@@ -191,7 +191,6 @@ def send_approval_notification_to_ben(subject):
         server.login(st.secrets["SMTP_USERNAME"], st.secrets["SMTP_PASSWORD"])
         server.sendmail(msg["From"], [msg["To"]], msg.as_string())
 
-
 # --- STREAMLIT APP ---
 st.set_page_config(page_title="Monthly Theme Selector", layout="wide")
 st.title("📬 Monthly Email Theme Selector")
@@ -212,7 +211,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
                 st.rerun()
     
-        if fields.get("EmailDraft"):
+        if fields.get("EmailDraft") and not fields.get("DraftApproved"):
             with st.expander("✏️ Add additional instructions and re-generate"):
                 extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
@@ -227,7 +226,20 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     st.success("Draft regenerated with new prompt.")
                     st.rerun()
     
-            draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
+            if fields.get("DraftApproved"):
+                st.success("✅ This draft has been approved and is ready to send.")
+                st.text_area(
+                    label="✉️ Final Draft (read-only)",
+                    value=fields["EmailDraft"],
+                    height=300,
+                    disabled=True
+                )
+            else:
+                draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
+                if st.button(f"💾 Save Edits for {segment}"):
+                    update_airtable_fields(selected["id"], {"EmailDraft": draft})
+                    st.success("Draft saved.")
+            
             col1, col2 = st.columns(2)
             with col1:
                 if st.button(f"💾 Save Edits for {segment}"):
