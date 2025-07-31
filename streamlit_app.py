@@ -128,18 +128,19 @@ for segment in ["Pre-Retiree", "Retiree"]:
     if selected:
         fields = selected["fields"]
         st.success(f"Selected theme: {fields['Subject']} – {fields['Description']}")
+        
         if not fields.get("EmailDraft"):
             st.write("You can generate the first draft now or add a custom prompt before regenerating.")
             if st.button(f"🪄 Generate Draft for {segment}"):
                 draft = generate_email_draft(fields["Subject"], fields["Description"], segment)
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
                 st.rerun()
-        else:
+    
+        if fields.get("EmailDraft"):
             with st.expander("✏️ Add additional instructions and re-generate"):
                 extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
                     full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
-    
                     response = client.chat.completions.create(
                         model="gpt-4o",
                         messages=[{"role": "user", "content": full_prompt}],
@@ -149,7 +150,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     update_airtable_fields(selected["id"], {"EmailDraft": new_draft})
                     st.success("Draft regenerated with new prompt.")
                     st.rerun()
-        else:
+    
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
             if st.button(f"💾 Save Edits for {segment}"):
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
@@ -157,6 +158,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
             if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
                 st.success("Draft marked as approved.")
+    
         if st.button(f"🔄 Change Theme for {segment}"):
             reset_segment_status(segment)
             st.rerun()
