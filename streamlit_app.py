@@ -148,9 +148,37 @@ def send_draft_email_to_shane(subject, draft):
         
         <p>
             You can approve or edit this draft here:<br>
-            <a href="https://hfp-monthly-theme-selector.streamlit.app/" style="color: #1a73e8;">Open the Streamlit App</a>
+            <a href="https://hfp-monthly-theme-selector.streamlit.app/" style="color: #1a73e8;">Open the Streamlit App.</a><br>
+            Or reply to this email.
         </p>
     
+        <p>– Your automated writing assistant</p>
+    </body>
+    </html>
+    """
+
+    msg.attach(MIMEText(html_body, "html"))
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(st.secrets["SMTP_USERNAME"], st.secrets["SMTP_PASSWORD"])
+        server.sendmail(msg["From"], [msg["To"]], msg.as_string())
+
+def send_approval_notification_to_ben(subject):
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = f"✅ Approved: {subject}"
+    msg["From"] = st.secrets["SMTP_USERNAME"]
+    msg["To"] = st.secrets["NOTIFY_EMAIL"]
+
+    html_body = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <p>Hi Ben,</p>
+        <p>The draft email for <strong>{subject}</strong> has been approved by Shane.</p>
+        <p>
+            You can review the final copy or continue with the next step here:<br>
+            <a href="https://hfp-monthly-theme-selector.streamlit.app/" style="color: #1a73e8;">Open the Streamlit App</a>
+        </p>
         <p>– Your automated writing assistant</p>
     </body>
     </html>
@@ -215,8 +243,9 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     
             if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
-                st.success("Draft marked as approved.")
-    
+                send_approval_notification_to_ben(fields["Subject"])
+                st.success("Draft marked as approved and notification sent.")
+
         if st.button(f"🔄 Change Theme for {segment}"):
             reset_segment_status(segment)
             st.rerun()
