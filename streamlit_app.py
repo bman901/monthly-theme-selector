@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 from datetime import datetime
 from openai import OpenAI
+import smtplib
+from email.mime.text import MIMEText
 
 # --- SECRETS ---
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
@@ -127,6 +129,20 @@ def update_airtable_fields(record_id, fields):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
     return requests.patch(url, json={"fields": fields}, headers=HEADERS)
 
+def send_draft_email_to_shane(subject, draft):
+    msg = MIMEText(
+        f"Hi Shane,\n\nHere's the draft email for the \"{subject}\" campaign:\n\n{draft}\n\nIf this looks good, mark it as approved in the Streamlit app.\n\n– Your automated writing assistant"
+    )
+    msg["Subject"] = f"Draft ready for review: {subject}"
+    msg["From"] = st.secrets["SMTP_USERNAME"]
+    msg["To"] = st.secrets["REVIEWER_EMAIL"]
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(st.secrets["SMTP_USERNAME"], st.secrets["SMTP_PASSWORD"])
+        server.sendmail(msg["From"], [msg["To"]], msg.as_string())
+
+
 # --- STREAMLIT APP ---
 st.set_page_config(page_title="Monthly Theme Selector", layout="wide")
 st.title("📬 Monthly Email Theme Selector")
@@ -163,9 +179,17 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     st.rerun()
     
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
-            if st.button(f"💾 Save Edits for {segment}"):
-                update_airtable_fields(selected["id"], {"EmailDraft": draft})
-                st.success("Draft saved.")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button(f"💾 Save Edits for {segment}"):
+                    update_airtable_fields(selected["id"], {"EmailDraft": draft})
+                    st.success("Draft saved.")
+            with col2:
+                if not fields.get("DraftApproved") and st.button(f"📤 Send to Shane for Approval for {segment}"):
+                    update_airtable_fields(selected["id"], {"DraftSubmitted": True})
+                    send_draft_email_to_shane(fields["Subject"], draft)
+                    st.success("Draft sent to Shane for review.")
+                    
             if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
                 st.success("Draft marked as approved.")
