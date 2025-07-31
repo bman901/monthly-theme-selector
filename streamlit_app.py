@@ -144,4 +144,31 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 update_airtable_fields(options[choice], {"Status": "skipped"})
                 st.rerun()
 
+# --- MANUAL THEME ENTRY ---
+for segment in ["Pre-Retiree", "Retiree"]:
+    with st.expander(f"➕ Add Manual Theme for {segment}"):
+        with st.form(f"manual_theme_form_{segment}"):
+            subject = st.text_input("Subject Line", key=f"subject_{segment}")
+            description = st.text_area("Description", key=f"desc_{segment}")
+            if st.form_submit_button("💾 Save Theme"):
+                if not subject or not description:
+                    st.error("Please enter both subject and description.")
+                else:
+                    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
+                    payload = {
+                        "fields": {
+                            "Segment": segment,
+                            "Subject": subject,
+                            "Description": description,
+                            "Status": "pending",
+                            "Month": get_month()
+                        }
+                    }
+                    res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
+                    if res.status_code == 200:
+                        st.success("Manual theme added successfully!")
+                        st.rerun()
+                    else:
+                        st.error("Failed to add theme: " + res.text)
+
 # --- END ---
