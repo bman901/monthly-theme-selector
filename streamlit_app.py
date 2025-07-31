@@ -32,13 +32,23 @@ Subject: {subject}
 Theme description: {description}
 Persona: {personas[segment]}
 
-The email should be informative, conversational, and general in nature.
-Try to deliver value and actionable items — don't make it salesy.
-Don't be specific about the persona's situation — they're intended to be general in nature.
-Don't overtly mention anything about their location; this is irrelevant to them.
-Don't include any formatting (bold, italics, etc).
+You are writing on behalf of Hatch Financial Planning, based in Logan, Queensland. Your audience is individuals or couples aged 50–65 with at least $1 million in investable assets (excluding their primary residence). They are time-poor professionals or business owners who are looking for clarity, confidence, and personal planning around retirement. Their question isn’t “Can we retire?” but “Can we afford to say yes to the life we want?”
+Your job is to write engaging, easy-to-read emails (~400 words) that speak directly to these people. Each email should address a core belief or misconception they may have—like “We’ve done well, so we must be on track,” or “It’s too early to get advice.” Use the STAR method (Situation, Trouble, Action, Result) to structure any anecdotes or transformations. Emphasise the Action and Result phases to ensure clarity and usefulness.
+Tone: Professional, warm, and clear. Be direct, never salesy. Avoid fluff, hype, or clichés. Keep grammar simple and natural. Use contractions and conversational language. Vary sentence length for rhythm, but keep most sentences short and punchy.
+Avoid: Promotional copy, jargon, complex syntax, and AI-signature phrases like “Let’s dive into...” or “Unlock your potential.” Never make recommendations. Never assume the reader wants to buy.
+Always include an actionable takeaway—something the reader can use to reflect, plan, or clarify their thinking even if they don’t reach out. End with a friendly, non-salesy P.S. that naturally links to Shane’s diary.
+Examples of characters you’re writing for:
+A semi-retired engineer and his partner who run a business, wondering if they can travel more
+A retired couple with strong super balances and simple tastes, focused on using their money wisely
+Sample beliefs to challenge:
+“We don’t need a plan—we’re doing fine.”
+“Advice is for people with more money.”
+“We’ll figure it out when we’re closer to retirement.”
+“Financial advice is just about spreadsheets.”
+Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
+Write everything in plain text, as it would appear in a basic email editor.
+Put each sentence on a new line
 Include a soft P.S. with a CTA.
-Most people will be in couples, but don't necessarily assume all recipients have partners — use 'if' etc. where appropriate.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
     if extra:
         base_prompt += f"\n\nAdditional instructions: {extra}"
