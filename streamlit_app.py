@@ -187,6 +187,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
             with col2:
                 if fields.get("EmailDraft") and not fields.get("DraftApproved", False):
                     if st.button(f"📤 Send to Shane for Approval for {segment}"):
+                        update_airtable_fields(selected["id"], {"EmailDraft": draft})
                         update_airtable_fields(selected["id"], {"DraftSubmitted": True})
                         send_draft_email_to_shane(fields["Subject"], draft)
                         st.success("Draft sent to Shane for review.")
