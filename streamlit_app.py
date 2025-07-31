@@ -3,210 +3,145 @@ import requests
 from datetime import datetime
 import openai
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-# Airtable config
+# --- SECRETS ---
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
 AIRTABLE_BASE_ID = st.secrets["AIRTABLE_BASE_ID"]
 AIRTABLE_TABLE_NAME = "MonthlyThemes"
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 HEADERS = {
     "Authorization": f"Bearer {AIRTABLE_PAT}",
     "Content-Type": "application/json"
 }
 
-# Airtable fetch
-def fetch_pending_themes(segment):
-    this_month = datetime.now().strftime("%B %Y")
+# --- HELPERS ---
+def get_month():
+    return datetime.now().strftime("%B %Y")
+
+def fetch_segment_record(segment):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
     params = {
-        "filterByFormula": f"AND(Segment = '{segment}', Status = 'pending', Month = '{this_month}')",
-        "pageSize": 50
+        "filterByFormula": f"AND(Segment = '{segment}', Month = '{get_month()}')",
+        "pageSize": 10
     }
     response = requests.get(url, headers=HEADERS, params=params)
     if response.status_code != 200:
-        st.error(f"Error fetching {segment} themes: {response.text}")
+        st.error(f"Error fetching records for {segment}: {response.text}")
         return []
     return response.json().get("records", [])
 
-# Airtable update
-def update_status(segment, new_record_id):
-    current_month = datetime.now().strftime("%B %Y")
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
-    params = {
-        "filterByFormula": f"AND(Segment = '{segment}', Status = 'selected', Month = '{current_month}')"
-    }
-    response = requests.get(url, headers=HEADERS, params=params)
-    if response.status_code == 200:
-        for record in response.json().get("records", []):
-            record_id = record["id"]
-            if record_id != new_record_id:
-                requests.patch(
-                    f"{url}/{record_id}",
-                    headers=HEADERS,
-                    json={"fields": {"Status": "pending"}}
-                )
-
-    # Now select the new theme
-    payload = {"fields": {"Status": "selected"}}
-    res = requests.patch(f"{url}/{new_record_id}", json=payload, headers=HEADERS)
+def update_status(record_id, status):
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+    res = requests.patch(url, json={"fields": {"Status": status}}, headers=HEADERS)
     return res.status_code == 200
 
+def reset_segment_status(segment):
+    records = fetch_segment_record(segment)
+    for record in records:
+        if record["fields"].get("Status") in ["selected", "skipped"]:
+            update_status(record["id"], "pending")
 
-# Page setup
-st.set_page_config(page_title="Theme Selector", layout="wide")
-st.title("📬 Monthly Email Theme Selector")
-
-# --- THEME SELECTORS ---
-for segment in ["Pre-Retiree", "Retiree"]:
-    st.header(segment)
-    records = fetch_pending_themes(segment)
-
-    if not records:
-        st.info("No pending themes for this segment.")
-        continue
-
-    options = {
-        f"{r['fields']['Subject']} – {r['fields']['Description']}": r['id']
-        for r in records
-    }
-
-    choice = st.radio(
-        f"Select a theme for {segment}:", list(options.keys()), key=segment)
-
-    if st.button(f"✅ Confirm selection for {segment}", key=f"{segment}_confirm"):
-        selected_id = options[choice]
-        if update_status(segment, selected_id):
-            st.success("Selection saved!")
-            st.rerun()
-        else:
-            st.error("Failed to update Airtable.")
-
-# --- MANUAL ENTRY ---
-st.markdown("---")
-st.header("✍️ Manually Create a Theme")
-
-with st.form("manual_theme_form"):
-    manual_segment = st.selectbox("Segment", ["Pre-Retiree", "Retiree"])
-    subject = st.text_input("Subject Line")
-    description = st.text_area("Description (1–2 sentences)")
-    submitted = st.form_submit_button("💾 Save Theme")
-
-    if submitted:
-        if not subject or not description:
-            st.error("Please complete both the subject and description.")
-        else:
-            url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
-            payload = {
-                "fields": {
-                    "Segment": manual_segment,
-                    "Subject": subject,
-                    "Description": description,
-                    "Status": "pending",
-                    "Month": datetime.now().strftime("%B %Y")
-                }
-            }
-            res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
-            if res.status_code == 200:
-                st.success("🎉 Theme saved successfully!")
-                st.rerun()  # Auto-refresh to show new theme
-            else:
-                st.error(f"⚠️ Failed to save theme: {res.text}")
-
-# --- GENERATE EMAILS ---
-
-# Define personas
-personas = {
-    "Pre-Retiree": (
-        "Paul and Lisa Harrington are in their late 50s in South East QLD. "
-        "They’re financially comfortable but time-poor. "
-        "They value clarity, simplicity, and confidence about the future. "
-    ),
-    "Retiree": (
-        "Alan and Margaret Rowe are in their mid to late 60s in South East QLD. "
-        "They're thoughtful, detail-focused, and value peace of mind. "
-    )
-}
-
-st.markdown("---")
-st.header("📝 Generate and Review Email Drafts")
+def fetch_pending_themes(segment):
+    return [r for r in fetch_segment_record(segment) if r["fields"].get("Status") == "pending"]
 
 def fetch_selected_theme(segment):
-    this_month = datetime.now().strftime("%B %Y")
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
-    params = {
-        "filterByFormula": f"AND(Segment = '{segment}', Status = 'selected', Month = '{this_month}')",
-        "pageSize": 1
+    records = fetch_segment_record(segment)
+    return next((r for r in records if r["fields"].get("Status") == "selected"), None)
+
+def fetch_skipped(segment):
+    records = fetch_segment_record(segment)
+    return next((r for r in records if r["fields"].get("Status") == "skipped"), None)
+
+def generate_email_draft(subject, description, segment):
+    personas = {
+        "Pre-Retiree": (
+            "Paul and Lisa Harrington are in their late 50s in South East QLD. "
+            "They’re financially comfortable but time-poor. "
+            "They value clarity, simplicity, and confidence about the future. "
+        ),
+        "Retiree": (
+            "Alan and Margaret Rowe are in their mid to late 60s in South East QLD. "
+            "They're thoughtful, detail-focused, and value peace of mind. "
+        )
     }
-    response = requests.get(url, headers=HEADERS, params=params)
-    if response.status_code != 200:
-        st.error(f"Error fetching selected theme for {segment}: {response.text}")
-        return []
-    return response.json().get("records", [])
+    prompt = (
+        f"Write a marketing email suitable for Australian {segment.lower()} clients.\n"
+        f"Subject: {subject}\n"
+        f"Theme description: {description}\n"
+        f"Persona: {personas[segment]}\n\n"
+        f"The email should be informative, conversational, and have a clear 'book a call' style CTA.\n"
+        f"Try to deliver value and actionable items, don't make it salesy "
+        f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
+    )
+    response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+    )
+    return response.choices[0].message.content.strip()
+
+def update_airtable_fields(record_id, fields):
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+    return requests.patch(url, json={"fields": fields}, headers=HEADERS)
+
+# --- STREAMLIT APP ---
+st.set_page_config(page_title="Monthly Theme Selector", layout="wide")
+st.title("📬 Monthly Email Theme Selector")
 
 for segment in ["Pre-Retiree", "Retiree"]:
+    st.markdown(f"## {segment}")
     selected = fetch_selected_theme(segment)
-    selected = [r for r in selected if r["fields"].get("Status") == "selected"]
+    skipped = fetch_skipped(segment)
 
-    if not selected:
-        st.info(f"No selected theme for {segment} yet.")
-        continue
+    if selected:
+        fields = selected["fields"]
+        st.success(f"Selected theme: {fields['Subject']} – {fields['Description']}")
+        if not fields.get("EmailDraft"):
+            if st.button(f"🪄 Generate Draft for {segment}"):
+                draft = generate_email_draft(fields["Subject"], fields["Description"], segment)
+                update_airtable_fields(selected["id"], {"EmailDraft": draft})
+                st.rerun()
+        else:
+            draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
+            if st.button(f"💾 Save Edits for {segment}"):
+                update_airtable_fields(selected["id"], {"EmailDraft": draft})
+                st.success("Draft saved.")
+            if not fields.get("DraftApproved") and st.button(f"✅ Mark as Approved for {segment}"):
+                update_airtable_fields(selected["id"], {"DraftApproved": True})
+                st.success("Draft marked as approved.")
+        if st.button(f"🔄 Change Theme for {segment}"):
+            reset_segment_status(segment)
+            st.rerun()
 
-    record = selected[0]  # Only one selected theme per segment
-    fields = record["fields"]
-    subject = fields["Subject"]
-    description = fields["Description"]
-    draft = fields.get("EmailDraft", "")
-    approved = fields.get("DraftApproved", False)
-    record_id = record["id"]
-
-    st.subheader(f"{segment}: {subject}")
-    st.caption(description)
-
-    if not draft:
-        if st.button(f"🪄 Generate Email Draft for {segment}"):
-            prompt = (
-                f"Write a marketing email suitable for Australian {segment.lower()} clients. "
-                f"Subject: {subject}\n"
-                f"Theme description: {description}\n"
-                f"Persona: {personas[segment]}\n\n"
-                f"The email should be informative, conversational, and have a clear 'book a call' style CTA. "
-                f"Try to deliver value and actionable items, don't make it salesy "
-                f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
-            )
-            with st.spinner("Generating email..."):
-                response = openai.ChatCompletion.create(
-                    model="gpt-4o",
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7,
-                )
-                email_text = response.choices[0].message.content.strip()
-
-                # Update Airtable
-                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-                payload = {"fields": {"EmailDraft": email_text}}
-                res = requests.patch(url, json=payload, headers=HEADERS)
-                if res.status_code == 200:
-                    st.success("✅ Email draft saved.")
-                    st.rerun()
-                else:
-                    st.error("❌ Failed to save draft to Airtable.")
+    elif skipped:
+        st.info("You’ve opted not to send a campaign this month.")
+        if st.button(f"🔁 Change your mind for {segment}"):
+            reset_segment_status(segment)
+            st.rerun()
 
     else:
-        edited_draft = st.text_area("✏️ Edit the draft below", value=draft, height=300, key=f"edit_{segment}")
+        pending = fetch_pending_themes(segment)
+        if not pending:
+            st.warning("No pending themes available.")
+            continue
+
+        options = {
+            f"{r['fields']['Subject']} – {r['fields']['Description']}": r["id"]
+            for r in pending
+        }
+        choice = st.radio("Select a theme:", list(options.keys()), key=f"choice_{segment}")
+
         col1, col2 = st.columns(2)
         with col1:
-            if st.button(f"💾 Save Edits for {segment}"):
-                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-                payload = {"fields": {"EmailDraft": edited_draft}}
-                res = requests.patch(url, json=payload, headers=HEADERS)
-                if res.status_code == 200:
-                    st.success("Draft updated.")
-                    st.rerun()
+            if st.button(f"✅ Confirm selection for {segment}"):
+                reset_segment_status(segment)
+                update_status(segment, options[choice])
+                st.rerun()
         with col2:
-            if not approved and st.button(f"✅ Mark as Approved for {segment}"):
-                url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-                payload = {"fields": {"DraftApproved": True}}
-                res = requests.patch(url, json=payload, headers=HEADERS)
-                if res.status_code == 200:
-                    st.success("Marked as approved.")
-                    st.rerun()
+            if st.button(f"🚫 Not this month for {segment}"):
+                reset_segment_status(segment)
+                update_status(segment, options[choice])  # skip by reusing one of the record ids
+                update_airtable_fields(options[choice], {"Status": "skipped"})
+                st.rerun()
+
+# --- END ---
