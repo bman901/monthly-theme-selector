@@ -30,10 +30,29 @@ def fetch_segment_record(segment):
         return []
     return response.json().get("records", [])
 
-def update_status(record_id, status):
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
-    res = requests.patch(url, json={"fields": {"Status": status}}, headers=HEADERS)
+def update_status(segment, new_record_id):
+    current_month = get_month()
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
+    params = {
+        "filterByFormula": f"AND(Segment = '{segment}', Status = 'selected', Month = '{current_month}')"
+    }
+    response = requests.get(url, headers=HEADERS, params=params)
+    if response.status_code == 200:
+        for record in response.json().get("records", []):
+            record_id = record["id"]
+            if record_id != new_record_id:
+                requests.patch(
+                    f"{url}/{record_id}",
+                    headers=HEADERS,
+                    json={"fields": {"Status": "pending"}}
+                )
+
+    # Now mark the new record as selected
+    patch_url = f"{url}/{new_record_id}"
+    payload = {"fields": {"Status": "selected"}}
+    res = requests.patch(patch_url, json=payload, headers=HEADERS)
     return res.status_code == 200
+
 
 def reset_segment_status(segment):
     records = fetch_segment_record(segment)
