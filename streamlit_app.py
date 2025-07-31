@@ -1,18 +1,63 @@
 import streamlit as st
 import requests
 from datetime import datetime
-import openai
+from openai import OpenAI
 
 # --- SECRETS ---
 AIRTABLE_PAT = st.secrets["AIRTABLE_PAT"]
 AIRTABLE_BASE_ID = st.secrets["AIRTABLE_BASE_ID"]
 AIRTABLE_TABLE_NAME = "MonthlyThemes"
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 HEADERS = {
     "Authorization": f"Bearer {AIRTABLE_PAT}",
     "Content-Type": "application/json"
 }
+
+# --- SHARED PROMPT BUILDER ---
+def build_prompt(subject, description, segment, extra=None):
+    personas = {
+        "Pre-Retiree": (
+            "A couple in their late 50s in South East QLD. "
+            "They’re financially comfortable but time-poor. "
+            "They value clarity, simplicity, and confidence about the future. "
+        ),
+        "Retiree": (
+            "A couple in their mid to late 60s in South East QLD. "
+            "They're thoughtful, detail-focused, and value peace of mind. "
+        )
+    }
+    base_prompt = (
+        f"Write a marketing email suitable for Australian {segment.lower()} prospects.
+"
+        f"Subject: {subject}
+"
+        f"Theme description: {description}
+"
+        f"Persona: {personas[segment]}
+
+"
+        f"The email should be informative, conversational, and general in nature.
+"
+        f"Try to deliver value and actionable items, don't make it salesy 
+"
+        f"Don't be specific about the persona's situation, they're intended to be general in nature 
+"
+        f"Don't overtly mention anything about their location; this is irrelevant to them 
+"
+        f"Don't include any formatting (bold, italics, etc) 
+"
+        f"Include a soft P.S. with a CTA  
+"
+        f"Most people will be in couples, but don't necessarily assume all recipients have partners, use 'if' etc. where appropriate rather than assuming 
+"
+        f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
+    )
+    if extra:
+        base_prompt += f"
+
+Additional instructions: {extra}"
+    return base_prompt
 
 # --- HELPERS ---
 def get_month():
@@ -73,40 +118,12 @@ def fetch_skipped(segment):
     return next((r for r in records if r["fields"].get("Status") == "skipped"), None)
 
 def generate_email_draft(subject, description, segment):
-    personas = {
-        "Pre-Retiree": (
-            "A couple in their late 50s in South East QLD. "
-            "They’re financially comfortable but time-poor. "
-            "They value clarity, simplicity, and confidence about the future. "
-        ),
-        "Retiree": (
-            "A couple in their mid to late 60s in South East QLD. "
-            "They're thoughtful, detail-focused, and value peace of mind. "
-        )
-    }
-    prompt = (
-        f"Write a marketing email suitable for Australian {segment.lower()} clients.\n"
-        f"Subject: {subject}\n"
-        f"Theme description: {description}\n"
-        f"Persona: {personas[segment]}\n\n"
-        f"The email should be informative, conversational, and general in nature.\n"
-        f"Try to deliver value and actionable items, don't make it salesy \n"
-        f"Don't be specific about the persona's situation, they're intended to be general in nature \n"
-        f"Don't overtly mention anything about their location; this is irrelevant to them \n"
-        f"Don't include any formatting (bold, italics, etc) \n"
-        f"Include a soft P.S. with a CTA about how we can help \n"
-        f"Most people will be in couples, but don't necessarily assume all recepients have partners, use 'if' etc. where appropriate rather than assuming "
-        f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
-    )
-    
-    client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-    
+    prompt = build_prompt(subject, description, segment)
     response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": prompt}],
-    temperature=0.7,
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
     )
-
     return response.choices[0].message.content.strip()
 
 def update_airtable_fields(record_id, fields):
@@ -126,10 +143,25 @@ for segment in ["Pre-Retiree", "Retiree"]:
         fields = selected["fields"]
         st.success(f"Selected theme: {fields['Subject']} – {fields['Description']}")
         if not fields.get("EmailDraft"):
+            st.write("You can generate the first draft now or add a custom prompt before regenerating.")
             if st.button(f"🪄 Generate Draft for {segment}"):
                 draft = generate_email_draft(fields["Subject"], fields["Description"], segment)
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
                 st.rerun()
+            with st.expander("✏️ Add additional instructions and re-generate"):
+                extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
+                if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
+                    full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
+
+                    response = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[{"role": "user", "content": full_prompt}],
+                        temperature=0.7,
+                    )
+                    new_draft = response.choices[0].message.content.strip()
+                    update_airtable_fields(selected["id"], {"EmailDraft": new_draft})
+                    st.success("Draft regenerated with new prompt.")
+                    st.rerun()
         else:
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
             if st.button(f"💾 Save Edits for {segment}"):
