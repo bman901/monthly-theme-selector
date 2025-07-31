@@ -112,10 +112,6 @@ for segment in ["Pre-Retiree", "Retiree"]:
     selected = fetch_selected_theme(segment)
     skipped = fetch_skipped(segment)
 
-    
-                    else:
-                        st.error("Failed to add theme: " + res.text)
-
     if selected:
         fields = selected["fields"]
         st.success(f"Selected theme: {fields['Subject']} – {fields['Description']}")
