@@ -236,12 +236,16 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 )
             else:
                 draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
-                col1, col2 = st.columns(2)
+                col1, col2, col3 = st.columns(3)
                 with col1:
                     if st.button(f"💾 Save Edits for {segment}", key=f"save_{segment}"):
                         update_airtable_fields(selected["id"], {"EmailDraft": draft})
                         st.success("Draft saved.")
                 with col2:
+                    if st.button(f"🔄 Change Theme for {segment}"):
+                        reset_segment_status(segment)
+                        st.rerun()
+                with col3:
                     if fields.get("EmailDraft") and not fields.get("DraftApproved", False):
                         if st.button(f"📤 Send to Shane for Approval for {segment}",key=f"send_{segment}"):
                             update_airtable_fields(selected["id"], {"EmailDraft": draft})
@@ -253,10 +257,6 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 update_airtable_fields(selected["id"], {"DraftApproved": True})
                 send_approval_notification_to_ben(fields["Subject"])
                 st.success("Draft marked as approved and notification sent.")
-
-        if st.button(f"🔄 Change Theme for {segment}"):
-            reset_segment_status(segment)
-            st.rerun()
 
     elif skipped:
         st.info("You’ve opted not to send a campaign this month.")
