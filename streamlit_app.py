@@ -45,9 +45,6 @@ Use Australian English. Do not use em or en dashes — use normal hyphens (-) on
     return base_prompt
 
 
-Additional instructions: {extra}"
-    return base_prompt
-
 # --- HELPERS ---
 def get_month():
     return datetime.now().strftime("%B %Y")
