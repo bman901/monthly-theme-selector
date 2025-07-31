@@ -39,7 +39,7 @@ Don't overtly mention anything about their location; this is irrelevant to them.
 Don't include any formatting (bold, italics, etc).
 Include a soft P.S. with a CTA.
 Most people will be in couples, but don't necessarily assume all recipients have partners — use 'if' etc. where appropriate.
-Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""} prospects.
+Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
 "
         f"Subject: {subject}
 "
