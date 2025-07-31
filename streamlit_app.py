@@ -130,7 +130,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
         st.success(f"Selected theme: {fields['Subject']} – {fields['Description']}")
         
         if not fields.get("EmailDraft"):
-            st.write("You can generate the first draft now or add a custom prompt before regenerating.")
+            st.write("Click below to generate a first draft of your email.")
             if st.button(f"🪄 Generate Draft for {segment}"):
                 draft = generate_email_draft(fields["Subject"], fields["Description"], segment)
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
