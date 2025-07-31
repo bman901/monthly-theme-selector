@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 from datetime import datetime
+import pytz
 from openai import OpenAI
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -61,7 +62,9 @@ Use Australian English. Do not use em or en dashes — use normal hyphens (-) on
 
 # --- HELPERS ---
 def get_month():
-    return datetime.now().strftime("%B %Y")
+    brisbane = pytz.timezone("Australia/Brisbane")
+    now = datetime.now(brisbane)
+    return now.strftime("%B %Y")
 
 def fetch_segment_record(segment):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
