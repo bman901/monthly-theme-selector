@@ -135,20 +135,20 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
                 st.rerun()
             else:
-            with st.expander("✏️ Add additional instructions and re-generate"):
-                extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
-                if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
-                    full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
-
-                    response = client.chat.completions.create(
-                        model="gpt-4o",
-                        messages=[{"role": "user", "content": full_prompt}],
-                        temperature=0.7,
-                    )
-                    new_draft = response.choices[0].message.content.strip()
-                    update_airtable_fields(selected["id"], {"EmailDraft": new_draft})
-                    st.success("Draft regenerated with new prompt.")
-                    st.rerun()
+                with st.expander("✏️ Add additional instructions and re-generate"):
+                    extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
+                    if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
+                        full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
+    
+                        response = client.chat.completions.create(
+                            model="gpt-4o",
+                            messages=[{"role": "user", "content": full_prompt}],
+                            temperature=0.7,
+                        )
+                        new_draft = response.choices[0].message.content.strip()
+                        update_airtable_fields(selected["id"], {"EmailDraft": new_draft})
+                        st.success("Draft regenerated with new prompt.")
+                        st.rerun()
         else:
             draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
             if st.button(f"💾 Save Edits for {segment}"):
