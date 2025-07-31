@@ -57,7 +57,9 @@ def reset_segment_status(segment):
     records = fetch_segment_record(segment)
     for record in records:
         if record["fields"].get("Status") in ["selected", "skipped"]:
-            update_status(record["id"], "pending")
+            record_id = record["id"]
+            url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}/{record_id}"
+            requests.patch(url, json={"fields": {"Status": "pending"}}, headers=HEADERS)
 
 def fetch_pending_themes(segment):
     return [r for r in fetch_segment_record(segment) if r["fields"].get("Status") == "pending"]
