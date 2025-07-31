@@ -27,8 +27,19 @@ def build_prompt(subject, description, segment, extra=None):
             "They're thoughtful, detail-focused, and value peace of mind. "
         )
     }
-    base_prompt = (
-        f"Write a marketing email suitable for Australian {segment.lower()} prospects.
+    base_prompt = f"""Write a marketing email suitable for Australian {segment.lower()} prospects.
+Subject: {subject}
+Theme description: {description}
+Persona: {personas[segment]}
+
+The email should be informative, conversational, and general in nature.
+Try to deliver value and actionable items — don't make it salesy.
+Don't be specific about the persona's situation — they're intended to be general in nature.
+Don't overtly mention anything about their location; this is irrelevant to them.
+Don't include any formatting (bold, italics, etc).
+Include a soft P.S. with a CTA.
+Most people will be in couples, but don't necessarily assume all recipients have partners — use 'if' etc. where appropriate.
+Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""} prospects.
 "
         f"Subject: {subject}
 "
@@ -54,7 +65,7 @@ def build_prompt(subject, description, segment, extra=None):
         f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
     )
     if extra:
-        base_prompt += f"
+    base_prompt += f"
 
 Additional instructions: {extra}"
     return base_prompt
