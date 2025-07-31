@@ -134,7 +134,8 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 draft = generate_email_draft(fields["Subject"], fields["Description"], segment)
                 update_airtable_fields(selected["id"], {"EmailDraft": draft})
                 st.rerun()
-            with st.expander("✏️ Add additional instructions and re-generate"):
+            else:
+                with st.expander("✏️ Add additional instructions and re-generate"):
                 extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
                     full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
