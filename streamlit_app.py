@@ -53,7 +53,6 @@ def update_status(segment, new_record_id):
     res = requests.patch(patch_url, json=payload, headers=HEADERS)
     return res.status_code == 200
 
-
 def reset_segment_status(segment):
     records = fetch_segment_record(segment)
     for record in records:
@@ -74,12 +73,12 @@ def fetch_skipped(segment):
 def generate_email_draft(subject, description, segment):
     personas = {
         "Pre-Retiree": (
-            "Paul and Lisa Harrington are in their late 50s in South East QLD. "
+            "A couple in their late 50s in South East QLD. "
             "They’re financially comfortable but time-poor. "
             "They value clarity, simplicity, and confidence about the future. "
         ),
         "Retiree": (
-            "Alan and Margaret Rowe are in their mid to late 60s in South East QLD. "
+            "A couple in their mid to late 60s in South East QLD. "
             "They're thoughtful, detail-focused, and value peace of mind. "
         )
     }
@@ -90,6 +89,7 @@ def generate_email_draft(subject, description, segment):
         f"Persona: {personas[segment]}\n\n"
         f"The email should be informative, conversational, and have a clear 'book a call' style CTA.\n"
         f"Try to deliver value and actionable items, don't make it salesy "
+        f"Most people will be in couples, but don't necessarily assume all recepients have partners, use 'if' etc. where appropriate rather than assuming "
         f"Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."
     )
     response = openai.ChatCompletion.create(
@@ -112,29 +112,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
     selected = fetch_selected_theme(segment)
     skipped = fetch_skipped(segment)
 
-    # --- MANUAL THEME ENTRY FOR EACH SEGMENT ---
-    with st.expander(f"➕ Add Manual Theme for {segment}"):
-        with st.form(f"manual_theme_form_{segment}"):
-            subject = st.text_input("Subject Line", key=f"subject_{segment}")
-            description = st.text_area("Description", key=f"desc_{segment}")
-            if st.form_submit_button("💾 Save Theme"):
-                if not subject or not description:
-                    st.error("Please enter both subject and description.")
-                else:
-                    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
-                    payload = {
-                        "fields": {
-                            "Segment": segment,
-                            "Subject": subject,
-                            "Description": description,
-                            "Status": "pending",
-                            "Month": get_month()
-                        }
-                    }
-                    res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
-                    if res.status_code == 200:
-                        st.success("Manual theme added successfully!")
-                        st.rerun()
+    
                     else:
                         st.error("Failed to add theme: " + res.text)
 
@@ -188,5 +166,31 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 update_status(segment, options[choice])  # skip by reusing one of the record ids
                 update_airtable_fields(options[choice], {"Status": "skipped"})
                 st.rerun()
+
+        # Show manual theme entry only when no selection has been made
+        with st.expander(f"➕ Add Manual Theme for {segment}"):
+            with st.form(f"manual_theme_form_{segment}"):
+                subject = st.text_input("Subject Line", key=f"subject_{segment}")
+                description = st.text_area("Description", key=f"desc_{segment}")
+                if st.form_submit_button("💾 Save Theme"):
+                    if not subject or not description:
+                        st.error("Please enter both subject and description.")
+                    else:
+                        url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
+                        payload = {
+                            "fields": {
+                                "Segment": segment,
+                                "Subject": subject,
+                                "Description": description,
+                                "Status": "pending",
+                                "Month": get_month()
+                            }
+                        }
+                        res = requests.post(url, json={"records": [payload]}, headers=HEADERS)
+                        if res.status_code == 200:
+                            st.success("Manual theme added successfully!")
+                            st.rerun()
+                        else:
+                            st.error("Failed to add theme: " + res.text)
 
 
