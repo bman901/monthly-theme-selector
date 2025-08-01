@@ -54,53 +54,65 @@ def build_prompt(subject, description, segment, extra=None):
             - Business exits, accumulation strategies, or super contribution rules"""
         )
     }
-    base_prompt = f"""Write a marketing email suitable for Australian {segment.lower()} prospects.
-Subject: {subject}
+    base_prompt = f"""
+Your job is to help a time-poor, financially successful Australian {segment.lower()} reader see something important they’ve been putting off or unsure about—without sounding alarmist or promotional.
+
+Use the subject and theme description below as your starting point. They must shape the core insight and message of the email. Do not reinterpret or reframe them.
+Subject: {subject}  
 Theme description: {description}
 Persona: {personas[segment]}
 
 You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland.
-The audience includes individuals or couples aged 50–70 with at least $1 million in investable assets (excluding their primary residence).
-They’re time-poor, financially capable, and want clarity and confidence around retirement planning.
-Your task is to write one clear, engaging, insight-driven email (~400-500 words) that helps the reader think clearly, avoid common mistakes, or feel more in control.
-Each email should respond to a real belief, pain point, or decision point that this audience might face.
+The audience includes individuals or couples with at least $1 million in investable assets (excluding their home), aged approximately 50–70.
+They are financially capable, time-poor, and thinking seriously about how to approach the next stage of life with clarity and confidence.
+They’re not asking “Can we retire?” but “Can we afford to say yes to the life we want?”
 
-Avoid starting with stories, metaphors, or “imagine this” setups. You can use these occasionally, but they should not be the default.
-Begin with a clear, honest insight, observation, or challenge. Speak directly and confidently—like you’re sitting across from someone smart who’s time-poor.
-Focus on structure, logic, and empathy. Vary your format. Prioritise clarity over narrative. Don’t assume every message needs a character or transformation.
+You are writing one plain-text email (400–500 words) in Shane’s voice.
+Do not introduce Shane—assume readers know him.
+Address each email to "*|FNAME|*".
 
-Don’t open with a character or scene unless it truly strengthens the message.
-Start with a belief, tension, or overlooked risk—not a personal anecdote.
+Each email must be anchored in a real tension, belief, or financial decision that people like this face.
+Use the provided theme or belief - do not invent your own.
+
+Example beliefs:
+“We’ll get serious about this later.”
+“We’ve done well, so we must be on track.”
+“We’ll just sell the business when the time’s right.”
+“Advice is for people with more money.”
 
 Your tone should be:
-- Professional, warm, and confident
-- Direct and grounded (not motivational or vague)
-- Written in simple, natural Australian English
+Professional, plainspoken, and clear
+Confident but calm
+Warm without being soft or vague
+Free from jargon, complexity, or sales talk
 
-Your structure can vary. You might:
-- Share a quick story to show a turning point
-- Break down a financial concept in plain language
-- Offer a simple exercise or question to help clarify their thinking
-- Bust a myth or highlight a commonly missed risk
+Your structure can vary:
+Start with an insight or challenge—not a story, scene, or metaphor
+Sometimes use a quick example, stat, or reflection—but never as fluff
+Use short, punchy sentences. Each one should deliver an idea
+Wrap up with a clear, useful action or reflection (even something small)
 
-Always include:
-- A clear point or takeaway (not just a reflection)
-- A practical, action-oriented ending (something to consider, do, or check)
-- A warm, non-salesy P.S. linking to Shane’s diary (after the email sign off)
+Each email should include:
+A clear point of view
+One idea that removes fog or reveals something people often miss
+A small, concrete takeaway—something the reader can reflect on or act on immediately
+A warm, non-salesy P.S. that links to Shane’s diary
+Do not include a call-to-action in the body. You may suggest a reflection or question to consider—but never tell the reader what to do. The only link or invitation should appear in the P.S.
 
 Avoid:
-- Fluff, motivational phrasing, or “lightbulb moment” clichés
-- Financial jargon or product talk
-- Recommendations or promotions
+Stories or characters at the start (you can use them later, but not to open)
+Motivation, metaphors, or “imagine this” style hooks
+Age, location, or other overly specific references
+Financial product talk or technical strategies
 
-Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
-Write everything in plain text, as it would appear in a basic email editor.
-Format the email so that there is a double line break after every sentence.
-Don't introduce Shane, assume people know who he is.
-Don't include a CTA in the body of the text, just as the P.S.
-Address emails to "*|FNAME|*"
-Don't directly reference the reader's age or location as it makes it too specific.
-Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
+Do not use:
+Formatting (bold, italics, bullet points)
+Paragraphs.
+
+Each sentence must appear on its own line.
+Insert two hard line breaks (press Return twice) after every sentence.
+Do not group sentences into paragraphs under any circumstances.
+"""
     if extra:
         base_prompt += f"\n\nAdditional instructions: {extra}"
     return base_prompt
