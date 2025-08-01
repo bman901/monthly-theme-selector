@@ -105,11 +105,15 @@ Free from jargon, complexity, or sales talk
 Your structure can vary:
 Start with an insight or challenge—not a story, scene, or metaphor
 Open with a sharp truth or tension—something a time-poor, smart reader would instantly recognise as real and relevant. Avoid soft openings like “You’ve worked hard.”
+The goal is to disarm quietly—not to provoke or preach.
 Sometimes use a quick example, stat, or reflection—but never as fluff
 Avoid overused phrases or generic GPT-style lines (e.g. “clarity is key”, “say yes to what you want”, “it’s not just about the numbers”). These sound polished but lack substance.
 Instead, use plain, specific language grounded in real financial experiences or decision points.
-Every sentence should earn its place—aim for precision, not polish.
-Use short, punchy sentences. Each one should deliver an idea
+Make every sentence earn its place.
+Avoid filler, clichés, or soft statements like “clarity is key” or “you deserve peace of mind.”
+Use short, punchy sentences. Every line should deliver an insight, build tension, or offer a practical shift in thinking.
+Don’t repeat phrases unless it’s intentional for rhythm or contrast.
+
 Wrap up with a clear, useful action or reflection (even something small)
 
 Each email should include:
