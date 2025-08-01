@@ -92,7 +92,8 @@ Write everything in plain text, as it would appear in a basic email editor.
 Put each sentence on a new line.
 Don't introduce Shane, assume people know who he is.
 Don't include a CTA in the body of the text, just as the P.S.
-Address emails to '*|FNAME|*'
+Address emails to "*|FNAME|*"
+If you tell a story and use names say something like "(not their real names)" to make it clear it's an example, as long as it fits with the flow.
 Don't directly reference the reader's age or location as it makes it too specific.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
     if extra:
