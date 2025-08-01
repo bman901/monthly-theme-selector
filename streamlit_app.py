@@ -60,8 +60,12 @@ Subject: {subject}
 Theme description: {description}
 Persona: {personas[segment]}
 
-You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland. The audience includes individuals or couples aged 50–70 with at least $1 million in investable assets (excluding their primary residence). They’re time-poor, financially capable, and want clarity and confidence around retirement planning.
-Your task is to write one clear, engaging, insight-driven email (~400-500 words) that helps the reader think clearly, avoid common mistakes, or feel more in control. Each email should respond to a real belief, pain point, or decision point that this audience might face.
+You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland.
+The audience includes individuals or couples aged 50–70 with at least $1 million in investable assets (excluding their primary residence).
+They’re time-poor, financially capable, and want clarity and confidence around retirement planning.
+Your task is to write one clear, engaging, insight-driven email (~400-500 words) that helps the reader think clearly, avoid common mistakes, or feel more in control.
+Each email should respond to a real belief, pain point, or decision point that this audience might face.
+
 Your tone should be:
 - Professional, warm, and confident
 - Direct and grounded (not motivational or vague)
@@ -76,7 +80,7 @@ Your structure can vary. You might:
 Always include:
 - A clear point or takeaway (not just a reflection)
 - A practical, action-oriented ending (something to consider, do, or check)
-- A warm, non-salesy P.S. linking to Shane’s diary
+- A warm, non-salesy P.S. linking to Shane’s diary (after the email sign off)
 
 Avoid:
 - Fluff, motivational phrasing, or “lightbulb moment” clichés
@@ -87,6 +91,8 @@ Do not use any formatting like **bold**, *italics*, bullet points, numbered list
 Write everything in plain text, as it would appear in a basic email editor.
 Put each sentence on a new line.
 Don't introduce Shane, assume people know who he is.
+Don't include a CTA in the body of the text, just as the P.S.
+Address emails to '*|FNAME|*'
 Don't directly reference the reader's age or location as it makes it too specific.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
     if extra:
