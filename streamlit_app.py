@@ -23,13 +23,36 @@ HEADERS = {
 def build_prompt(subject, description, segment, extra=None):
     personas = {
         "Pre-Retiree": (
-            "A couple in their late 50s in South East QLD. "
-            "They’re financially comfortable but time-poor. "
-            "They value clarity, simplicity, and confidence about the future. "
+            f"""These readers are in their 50s or early 60s, often still working (full or part time), and juggling business or family commitments.
+            They’ve done well financially but want to ensure they’re not missing anything as retirement comes into view.
+            
+            Focus on:
+            - Reducing complexity (e.g. super accounts, offset loans, business equity)
+            - Knowing when/how to wind down work
+            - Converting equity or business value into lifestyle flexibility
+            - Avoiding the cost of procrastination or false confidence (“we’re doing fine”)
+            - Highlighting the value of early clarity (while choices are still wide)
+            
+            Avoid:
+            - Pension-phase drawdown content
+            - Age Pension, Centrelink, or aged care topics
+            - Tone that implies they’ve already retired or are about to any minute"""
         ),
         "Retiree": (
-            "A couple in their mid to late 60s in South East QLD. "
-            "They're thoughtful, detail-focused, and value peace of mind. "
+            f"""These readers are in their 60s or early 70s and have stopped full-time work. They’re no longer building wealth—they’re using it.
+            They want peace of mind, simplicity, and guidance that’s aligned with their values.
+            
+            Focus on:
+            - Confident drawdown and income management
+            - Managing market risk without panic
+            - Planning for estate and family support
+            - Spending without regret
+            - Simplifying their financial life
+            - Navigating health, longevity, or cognitive decline risk
+            
+            Avoid:
+            - Early-stage questions like “Can we scale back work?”
+            - Business exits, accumulation strategies, or super contribution rules"""
         )
     }
     base_prompt = f"""Write a marketing email suitable for Australian {segment.lower()} prospects.
@@ -37,24 +60,32 @@ Subject: {subject}
 Theme description: {description}
 Persona: {personas[segment]}
 
-You are writing on behalf of Hatch Financial Planning, based in Logan, Queensland. Your audience is individuals or couples aged 50–65 with at least $1 million in investable assets (excluding their primary residence). They are time-poor professionals or business owners who are looking for clarity, confidence, and personal planning around retirement. Their question isn’t “Can we retire?” but “Can we afford to say yes to the life we want?”
-Your job is to write engaging, easy-to-read emails (~400 words) that speak directly to these people. Each email should address a core belief or misconception they may have—like “We’ve done well, so we must be on track,” or “It’s too early to get advice.” Use the STAR method (Situation, Trouble, Action, Result) to structure any anecdotes or transformations. Emphasise the Action and Result phases to ensure clarity and usefulness.
-Tone: Professional, warm, and clear. Be direct, never salesy. Avoid fluff, hype, or clichés. Keep grammar simple and natural. Use contractions and conversational language. Vary sentence length for rhythm, but keep most sentences short and punchy.
-Avoid: Promotional copy, jargon, complex syntax, and AI-signature phrases like “Let’s dive into...” or “Unlock your potential.” Never make recommendations. Never assume the reader wants to buy.
-Always include an actionable takeaway—something the reader can use to reflect, plan, or clarify their thinking even if they don’t reach out. End with a friendly, non-salesy P.S. that naturally links to Shane’s diary.
-Examples of characters you’re writing for:
-A semi-retired engineer and his partner who run a business, wondering if they can travel more
-A retired couple with strong super balances and simple tastes, focused on using their money wisely
-Sample beliefs to challenge:
-“We don’t need a plan—we’re doing fine.”
-“Advice is for people with more money.”
-“We’ll figure it out when we’re closer to retirement.”
-“Financial advice is just about spreadsheets.”
+You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland. The audience includes individuals or couples aged 50–70 with at least $1 million in investable assets (excluding their primary residence). They’re time-poor, financially capable, and want clarity and confidence around retirement planning.
+Your task is to write one clear, engaging, insight-driven email (~400-500 words) that helps the reader think clearly, avoid common mistakes, or feel more in control. Each email should respond to a real belief, pain point, or decision point that this audience might face.
+Your tone should be:
+- Professional, warm, and confident
+- Direct and grounded (not motivational or vague)
+- Written in simple, natural Australian English
+
+Your structure can vary. You might:
+- Share a quick story to show a turning point
+- Break down a financial concept in plain language
+- Offer a simple exercise or question to help clarify their thinking
+- Bust a myth or highlight a commonly missed risk
+
+Always include:
+- A clear point or takeaway (not just a reflection)
+- A practical, action-oriented ending (something to consider, do, or check)
+- A warm, non-salesy P.S. linking to Shane’s diary
+
+Avoid:
+- Fluff, motivational phrasing, or “lightbulb moment” clichés
+- Financial jargon or product talk
+- Recommendations or promotions
+
 Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
 Write everything in plain text, as it would appear in a basic email editor.
-Put each sentence on a new line.
 Don't directly reference the reader's age or location as it makes it too specific.
-Include a soft P.S. with a CTA.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
     if extra:
         base_prompt += f"\n\nAdditional instructions: {extra}"
