@@ -115,6 +115,7 @@ Financial product talk or technical strategies
 Do not use:
 Formatting (bold, italics, bullet points)
 Paragraphs.
+Each sentence or two must appear on its own line. Insert two hard line breaks (press Return twice) after every one or two sentences. Do not group sentences into paragraphs under any circumstances.
 En dashes (–) or em dashes (—). Use standard hyphens (-) only and only when necessary.
 """
     if extra:
