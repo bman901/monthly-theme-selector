@@ -74,9 +74,9 @@ Start each email with "Hi *|FNAME|*".
 Each email must be anchored in a real tension, belief, or financial decision that people like this face.
 Use the provided theme or belief - do not invent your own.
 The email must confront the belief or tension embedded in the theme or description.
-Don’t soften it or skip it.
-Show what’s at stake if it’s ignored—missed flexibility, late decisions, or years of drift.
-Then offer clarity—not comfort—as the way forward.
+Do not soften the belief with motivational phrasing or by shifting focus to general positives.
+Name the consequence or missed opportunity that results from avoiding the core decision.
+Then build toward one concrete, grounded insight that helps shift perspective.
 
 Examples of strong belief tension openers:
     “Most people don’t realise how much money they leave unstructured.”
@@ -111,7 +111,8 @@ Avoid overused phrases or generic GPT-style lines (e.g. “clarity is key”, �
 Instead, use plain, specific language grounded in real financial experiences or decision points.
 Make every sentence earn its place.
 Avoid filler, clichés, or soft statements like “clarity is key” or “you deserve peace of mind.”
-Use short, punchy sentences. Every line should deliver an insight, build tension, or offer a practical shift in thinking.
+Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
+Every line should deliver an insight, build tension, or offer a practical shift in thinking.
 Don’t repeat phrases unless it’s intentional for rhythm or contrast.
 
 Wrap up with a clear, useful action or reflection (even something small)
@@ -122,6 +123,9 @@ One idea that removes fog or reveals something people often miss
 A small, concrete takeaway—something the reader can reflect on or act on immediately
 A sign off as Shane at the end of the email body (before the P.S.), saying 'Warm Regards', 'Best Wishes' or something similar
 A warm, non-salesy P.S. that links to Shane’s diary
+The P.S. must stay warm and low-key.
+Do not use promotional phrases like “gain clarity,” “plan your future,” or “secure your retirement.”
+Just link simply and naturally to Shane’s diary, as if inviting a casual follow-up.
 Do not include a call-to-action in the body. You may suggest a reflection or question to consider—but never tell the reader what to do. The only link or invitation should appear in the P.S.
 
 Avoid:
@@ -129,6 +133,9 @@ Stories or characters at the start (you can use them later, but not to open)
 Motivation, metaphors, or “imagine this” style hooks
 Age, location, or other overly specific references
 Financial product talk or technical strategies
+GPT-style phrasing like “gain clarity and confidence,” “imagine the freedom,” or “unlock your potential.”
+These sound polished but generic and erode trust.
+Use grounded, plainspoken language that reflects real financial experiences or trade-offs.
 
 Do not use:
 Formatting (bold, italics, bullet points)
