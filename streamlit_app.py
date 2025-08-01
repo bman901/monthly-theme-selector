@@ -65,6 +65,13 @@ They’re time-poor, financially capable, and want clarity and confidence around
 Your task is to write one clear, engaging, insight-driven email (~400-500 words) that helps the reader think clearly, avoid common mistakes, or feel more in control.
 Each email should respond to a real belief, pain point, or decision point that this audience might face.
 
+Avoid starting with stories, metaphors, or “imagine this” setups. You can use these occasionally, but they should not be the default.
+Begin with a clear, honest insight, observation, or challenge. Speak directly and confidently—like you’re sitting across from someone smart who’s time-poor.
+Focus on structure, logic, and empathy. Vary your format. Prioritise clarity over narrative. Don’t assume every message needs a character or transformation.
+
+Don’t open with a character or scene unless it truly strengthens the message.
+Start with a belief, tension, or overlooked risk—not a personal anecdote.
+
 Your tone should be:
 - Professional, warm, and confident
 - Direct and grounded (not motivational or vague)
@@ -88,7 +95,7 @@ Avoid:
 
 Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
 Write everything in plain text, as it would appear in a basic email editor.
-Put each sentence on a new line.
+Format the email so that every sentence appears on its own line.
 Don't introduce Shane, assume people know who he is.
 Don't include a CTA in the body of the text, just as the P.S.
 Address emails to "*|FNAME|*"
@@ -314,6 +321,8 @@ st.title("📬 Monthly Email Theme Selector")
 
 for segment in ["Pre-Retiree", "Retiree"]:
     st.markdown(f"## {segment}")
+    if f"extra_prompt_{segment}" not in st.session_state:
+        st.session_state[f"extra_prompt_{segment}"] = ""
     selected = fetch_selected_theme(segment)
     skipped = fetch_skipped(segment)
 
@@ -330,9 +339,44 @@ for segment in ["Pre-Retiree", "Retiree"]:
     
         if fields.get("EmailDraft") and not fields.get("DraftApproved"):
             with st.expander("✏️ Add additional instructions and re-generate"):
-                extra_prompt = st.text_area("Additional prompt (optional):", key=f"extra_prompt_{segment}")
+                st.session_state[f"extra_prompt_{segment}"] = st.text_area(
+                    "Additional prompt (optional):",
+                    value=st.session_state[f"extra_prompt_{segment}"],
+                    key=f"prompt_box_{segment}"
+                )
+                colA, colB, colC = st.columns(3)
+                with colA:
+                    if st.button("➕ Direct Insight", key=f"insight_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: direct insight"
+                
+                with colB:
+                    if st.button("➕ Story", key=f"story_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: story"
+                
+                with colC:
+                    if st.button("➕ Exercise", key=f"exercise_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: exercise"
+                
+                colD, colE, colF = st.columns(3)
+                with colD:
+                    if st.button("➕ Myth Buster", key=f"myth_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: myth buster"
+                
+                with colE:
+                    if st.button("➕ Case Study", key=f"case_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: case study"
+                
+                with colF:
+                    if st.button("➕ Q&A", key=f"qa_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: Q&A"
+
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
-                    full_prompt = build_prompt(fields["Subject"], fields["Description"], segment, extra_prompt)
+                    full_prompt = build_prompt(
+                        fields["Subject"],
+                        fields["Description"],
+                        segment,
+                        st.session_state[f"extra_prompt_{segment}"]
+                    )
                     response = client.chat.completions.create(
                         model="gpt-4o",
                         messages=[{"role": "user", "content": full_prompt}],
