@@ -70,6 +70,9 @@ They’re not asking “Can we retire?” but “Can we afford to say yes to the
 You are writing one plain-text email (of around 500 words) in Shane’s voice.
 Do not introduce Shane—assume readers know him.
 Start each email with "Hi *|FNAME|*".
+Use Australian spelling consistently throughout.
+Avoid Americanisms such as “realize,” “optimise,” or “calendar.”
+Write naturally for an Australian reader.
 
 Each email must be anchored in a real tension, belief, or financial decision that people like this face.
 Use the provided theme or belief - do not invent your own.
