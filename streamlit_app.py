@@ -85,6 +85,8 @@ Avoid:
 
 Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
 Write everything in plain text, as it would appear in a basic email editor.
+Put each sentence on a new line.
+Don't introduce Shane, assume people know who he is.
 Don't directly reference the reader's age or location as it makes it too specific.
 Use Australian English. Do not use em or en dashes — use normal hyphens (-) only and sparingly so."""
     if extra:
