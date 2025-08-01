@@ -69,10 +69,20 @@ They’re not asking “Can we retire?” but “Can we afford to say yes to the
 
 You are writing one plain-text email (of around 500 words) in Shane’s voice.
 Do not introduce Shane—assume readers know him.
-Address each email to "*|FNAME|*".
+Start each email with "Hi *|FNAME|*".
 
 Each email must be anchored in a real tension, belief, or financial decision that people like this face.
 Use the provided theme or belief - do not invent your own.
+The email must confront the belief or tension embedded in the theme or description.
+Don’t soften it or skip it.
+Show what’s at stake if it’s ignored—missed flexibility, late decisions, or years of drift.
+Then offer clarity—not comfort—as the way forward.
+
+Examples of strong belief tension openers:
+    “Most people don’t realise how much money they leave unstructured.”
+    “You can be financially secure and still feel unprepared.”
+    “We often meet people who’ve done everything right—but still hesitate.”
+These aren’t harsh—but they’re sharp. They start with truth, not fluff.
 
 Be specific and grounded. Avoid vague concepts like “clarity is key” or “make the most of your money.” Instead, explain what clarity looks like in real terms—e.g. fewer accounts, clear timelines, known trade-offs.
 Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
@@ -94,7 +104,11 @@ Free from jargon, complexity, or sales talk
 
 Your structure can vary:
 Start with an insight or challenge—not a story, scene, or metaphor
+Open with a sharp truth or tension—something a time-poor, smart reader would instantly recognise as real and relevant. Avoid soft openings like “You’ve worked hard.”
 Sometimes use a quick example, stat, or reflection—but never as fluff
+Avoid overused phrases or generic GPT-style lines (e.g. “clarity is key”, “say yes to what you want”, “it’s not just about the numbers”). These sound polished but lack substance.
+Instead, use plain, specific language grounded in real financial experiences or decision points.
+Every sentence should earn its place—aim for precision, not polish.
 Use short, punchy sentences. Each one should deliver an idea
 Wrap up with a clear, useful action or reflection (even something small)
 
