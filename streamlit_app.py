@@ -117,8 +117,13 @@ Avoid filler, clichés, or soft statements like “clarity is key” or “you d
 Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
 Every line should deliver an insight, build tension, or offer a practical shift in thinking.
 Don’t repeat phrases unless it’s intentional for rhythm or contrast.
-
 Wrap up with a clear, useful action or reflection (even something small)
+Ending strength matters.
+Before the sign-off, include a final sentence that reconnects the reader’s reflection to the real-life consequence of delay or inaction.
+This closing line should sharpen the takeaway—not summarise, but underscore the cost of indecision or procrastination.
+Example:
+“Because what’s unclear today often becomes the thing that holds you back tomorrow.”
+Avoid soft, open-ended fades. Make the last line before the sign-off count.
 
 Each email should include:
 A clear point of view
