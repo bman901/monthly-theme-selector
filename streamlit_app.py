@@ -318,8 +318,10 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 st.rerun()
             if st.button(f"📤 Push to Mailchimp for {segment}", key=f"mailchimp_{segment}"):
                 create_mailchimp_campaign(fields["Subject"], fields["EmailDraft"], segment)
+        
         else:
-            draft = st.text_area("✏️ Edit your draft:", value=fields["EmailDraft"], height=300)
+            draft = st.text_area("✏️ Edit your draft:", value=fields.get("EmailDraft", ""), height=300, key=f"edit_draft_{segment}")
+
             col1, col2, col3 = st.columns(3)
             with col1:
                 if st.button(f"💾 Save Edits for {segment}", key=f"save_{segment}"):
