@@ -67,12 +67,18 @@ The audience includes individuals or couples with at least $1 million in investa
 They are financially capable, time-poor, and thinking seriously about how to approach the next stage of life with clarity and confidence.
 They’re not asking “Can we retire?” but “Can we afford to say yes to the life we want?”
 
-You are writing one plain-text email (400–500 words) in Shane’s voice.
+You are writing one plain-text email (of around 500 words) in Shane’s voice.
 Do not introduce Shane—assume readers know him.
 Address each email to "*|FNAME|*".
 
 Each email must be anchored in a real tension, belief, or financial decision that people like this face.
 Use the provided theme or belief - do not invent your own.
+
+Be specific and grounded. Avoid vague concepts like “clarity is key” or “make the most of your money.” Instead, explain what clarity looks like in real terms—e.g. fewer accounts, clear timelines, known trade-offs.
+Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
+Each idea should build on the one before it. Don’t just list thoughts—develop the insight.
+Aim for 1–2 sentences per idea. Vary rhythm: combine punchy lines with occasional longer reflections.
+Don’t summarise or conclude too early. Let the message unfold with direction and clarity.
 
 Example beliefs:
 “We’ll get serious about this later.”
@@ -96,6 +102,7 @@ Each email should include:
 A clear point of view
 One idea that removes fog or reveals something people often miss
 A small, concrete takeaway—something the reader can reflect on or act on immediately
+A sign off as Shane at the end of the email body (before the P.S.), saying 'Warm Regards', 'Best Wishes' or something similar
 A warm, non-salesy P.S. that links to Shane’s diary
 Do not include a call-to-action in the body. You may suggest a reflection or question to consider—but never tell the reader what to do. The only link or invitation should appear in the P.S.
 
@@ -108,10 +115,7 @@ Financial product talk or technical strategies
 Do not use:
 Formatting (bold, italics, bullet points)
 Paragraphs.
-
-Each sentence must appear on its own line.
-Insert two hard line breaks (press Return twice) after every sentence.
-Do not group sentences into paragraphs under any circumstances.
+En dashes (–) or em dashes (—). Use standard hyphens (-) only and only when necessary.
 """
     if extra:
         base_prompt += f"\n\nAdditional instructions: {extra}"
