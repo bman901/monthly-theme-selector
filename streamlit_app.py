@@ -27,9 +27,8 @@ def build_prompt(subject, description, segment, extra=None):
             They’ve done well financially but want to ensure they’re not missing anything as retirement comes into view.
             
             Focus on:
-            - Reducing complexity (e.g. super accounts, offset loans, business equity)
+            - Reducing complexity (e.g. super accounts, offset loans, investments)
             - Knowing when/how to wind down work
-            - Converting equity or business value into lifestyle flexibility
             - Avoiding the cost of procrastination or false confidence (“we’re doing fine”)
             - Highlighting the value of early clarity (while choices are still wide)
             
