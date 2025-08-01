@@ -95,7 +95,7 @@ Avoid:
 
 Do not use any formatting like **bold**, *italics*, bullet points, numbered lists, or code blocks.
 Write everything in plain text, as it would appear in a basic email editor.
-Format the email so that every sentence appears on its own line.
+Format the email so that there is a double line break after every sentence.
 Don't introduce Shane, assume people know who he is.
 Don't include a CTA in the body of the text, just as the P.S.
 Address emails to "*|FNAME|*"
@@ -347,28 +347,28 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 colA, colB, colC = st.columns(3)
                 with colA:
                     if st.button("➕ Direct Insight", key=f"insight_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: direct insight"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: direct insight"
                 
                 with colB:
                     if st.button("➕ Story", key=f"story_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: story"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: story"
                 
                 with colC:
                     if st.button("➕ Exercise", key=f"exercise_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: exercise"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: exercise"
                 
                 colD, colE, colF = st.columns(3)
                 with colD:
                     if st.button("➕ Myth Buster", key=f"myth_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: myth buster"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: myth buster"
                 
                 with colE:
                     if st.button("➕ Case Study", key=f"case_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: case study"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: case study"
                 
                 with colF:
                     if st.button("➕ Q&A", key=f"qa_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\n\nFormat: Q&A"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nFormat: Q&A"
 
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
                     full_prompt = build_prompt(
