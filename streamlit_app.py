@@ -315,7 +315,7 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
         "recipients": {
             "list_id": audience_id,
             "segment_opts": {
-                "saved_segment_id": tag_id
+                "saved_segment_id": int(tag_id)
             }
         },
         "settings": {
