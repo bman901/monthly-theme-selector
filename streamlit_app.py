@@ -85,6 +85,7 @@ Be specific and grounded. Avoid vague concepts like “clarity is key” or “m
 Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
 Each idea should build on the one before it. Don’t just list thoughts—develop the insight.
 Use friction and consequence. Show what inaction really costs—whether it’s missed years, poor timing, or hidden complexity.
+Be explicit about what inaction can cost. Use concrete consequences: earning extra years, missing long-term strategies, overlooked tax or flexibility opportunities. Name an outcome people might regret—not just “missed opportunities.”
 Avoid circular phrasing. Each sentence should move the reader toward clarity.
 Aim for 1–2 sentences per idea. Vary rhythm: combine punchy lines with occasional longer reflections.
 Don’t summarise or conclude too early. Let the message unfold with direction and clarity.
@@ -113,14 +114,18 @@ Avoid filler, clichés, or soft statements like “clarity is key” or “you d
 Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
 Every line should deliver an insight, build tension, or offer a practical shift in thinking.
 Don’t repeat phrases unless it’s intentional for rhythm or contrast.
+Do not include hypothetical phrases like “Imagine knowing…” or “It can feel like…” These prompt fanciful thinking. Instead, stick to real experiences or practical realities commonly observed among people like this.
 
-Wrap up with a clear, useful action or reflection (even something small).
-Ending strength matters.
-Before the sign-off, include a final sentence that reconnects the reader’s reflection to the real-life consequence of delay or inaction.
-This closing line should sharpen the takeaway—not summarise, but underscore the cost of indecision or procrastination.
+Wrap up with a clear, useful takeaway. This could be a reflection or small action—something the reader can do or think about immediately.
+Include one specific micro-action—not a general prompt. For example:
+“Pick one super account you haven’t reviewed in over a year and ask: does this still serve your goals?”
+“List every active account you have—if it’s more than five, it’s time to simplify.”
+
+Then, before the sign-off, add one sharp sentence that reconnects the reflection or action to a real-life consequence of inaction. 
+This must highlight what’s at stake—not by summarising, but by sharpening the tension.
 Example:
 “Because what’s unclear today often becomes the thing that holds you back tomorrow.”
-Avoid soft, open-ended fades and weak or open-ended conclusions. Make the last line before the sign-off count.
+Avoid soft fades or vague conclusions. Make sure the final sentence before the sign-off delivers a clear insight or consequence.
 
 Each email should include:
 A clear point of view
