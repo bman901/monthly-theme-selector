@@ -297,12 +297,10 @@ def send_approval_notification_to_ben(subject):
 # --- MAILCHIMP LINK ---
 
 def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
-    # Mailchimp config
     api_key = st.secrets["MAILCHIMP_API_KEY"]
     server_prefix = st.secrets["MAILCHIMP_SERVER_PREFIX"]
-    list_id = st.secrets["MAILCHIMP_AUDIENCE_ID"]
+    audience_id = st.secrets["MAILCHIMP_AUDIENCE_ID"]
 
-    # Segment tag ID
     tag_id = (
         st.secrets["MAILCHIMP_TAG_ID_PRE_RETIREES"]
         if segment == "Pre-Retiree"
@@ -310,24 +308,24 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
     )
 
     base_url = f"https://{server_prefix}.api.mailchimp.com/3.0"
-    auth = ("anystring", api_key)  # Mailchimp uses basic auth
+    auth = ("anystring", api_key)
 
     # Step 1: Create campaign
     campaign_data = {
         "type": "regular",
         "recipients": {
-            "list_id": list_id,
+            "list_id": audience_id,
             "segment_opts": {
                 "match": "any",
                 "conditions": [
                     {
-                        "condition_type": "StaticSegment",
+                        "condition_type": "EmailAddress",
                         "field": "static_segment",
-                        "op": "eq",
+                        "op": "static_is",
                         "value": tag_id
                     }
                 ]
-            },
+            }
         },
         "settings": {
             "subject_line": subject,
@@ -364,7 +362,7 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
     )
 
     if content_res.status_code == 200:
-        st.success("📤 Campaign created in Mailchimp!")
+        st.success(f"✅ Campaign created (not sent). ID: {campaign_id}")
     else:
         st.error("❌ Failed to set campaign content.")
         st.error(content_res.text)
