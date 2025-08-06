@@ -307,24 +307,15 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
         else st.secrets["MAILCHIMP_TAG_ID_RETIREES"]
     )
 
-    base_url = f"https://{server_prefix}.api.mailchimp.com/3.0"
+    base_url = f"https://{dc}.api.mailchimp.com/3.0"
     auth = ("anystring", api_key)
 
-    # Step 1: Create campaign
     campaign_data = {
         "type": "regular",
         "recipients": {
             "list_id": audience_id,
             "segment_opts": {
-                "match": "any",
-                "conditions": [
-                    {
-                        "condition_type": "EmailAddress",
-                        "field": "static_segment",
-                        "op": "static_is",
-                        "value": tag_id
-                    }
-                ]
+                "saved_segment_id": tag_id
             }
         },
         "settings": {
@@ -336,33 +327,21 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
         }
     }
 
-    campaign_res = requests.post(
-        f"{base_url}/campaigns",
-        auth=auth,
-        json=campaign_data
-    )
-
+    campaign_res = requests.post(f"{base_url}/campaigns", auth=auth, json=campaign_data)
     if campaign_res.status_code != 200:
-        st.error("❌ Failed to create Mailchimp campaign.")
+        st.error("❌ Failed to create campaign.")
         st.error(campaign_res.text)
         return None
-
     campaign_id = campaign_res.json()["id"]
 
-    # Step 2: Set campaign content
-    content_data = {
+    content = {
         "plain_text": draft,
         "html": f"<html><body><p>{draft.replace(chr(10), '<br>')}</p></body></html>"
     }
 
-    content_res = requests.put(
-        f"{base_url}/campaigns/{campaign_id}/content",
-        auth=auth,
-        json=content_data
-    )
-
+    content_res = requests.put(f"{base_url}/campaigns/{campaign_id}/content", auth=auth, json=content)
     if content_res.status_code == 200:
-        st.success(f"✅ Campaign created (not sent). ID: {campaign_id}")
+        st.success(f"✅ Campaign created (not sent), ID: {campaign_id}")
     else:
         st.error("❌ Failed to set campaign content.")
         st.error(content_res.text)
