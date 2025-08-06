@@ -58,7 +58,7 @@ def build_prompt(subject, description, segment, extra=None):
 Your job is to help a time-poor, financially successful Australian {segment.lower()} reader see something important they’ve been putting off or unsure about—without sounding alarmist or promotional.
 
 Use the subject and theme description below as your starting point. They must shape the core insight and message of the email. Do not reinterpret or reframe them.
-Subject: {subject}  
+Subject: {subject}
 Theme description: {description}
 Persona: {personas[segment]}
 
@@ -69,9 +69,9 @@ They’re not asking “Can we retire?” but “Can we afford to say yes to the
 
 You are writing one plain-text email (of around 500 words) in Shane’s voice.
 Do not introduce Shane—assume readers know him.
-Start each email with "Hi *|FNAME|*".
+Start each email with "Hi |FNAME|".
 Use Australian spelling consistently throughout.
-Avoid Americanisms such as “realize,” “optimise,” or “calendar.”
+Avoid Americanisms such as “realize,” “optimize,” or “calendar.”
 Write naturally for an Australian reader.
 
 Each email must be anchored in a real tension, belief, or financial decision that people like this face.
@@ -82,14 +82,16 @@ Name the consequence or missed opportunity that results from avoiding the core d
 Then build toward one concrete, grounded insight that helps shift perspective.
 
 Examples of strong belief tension openers:
-    “Most people don’t realise how much money they leave unstructured.”
-    “You can be financially secure and still feel unprepared.”
-    “We often meet people who’ve done everything right—but still hesitate.”
+“Most people don’t realise how much money they leave unstructured.”
+“You can be financially secure and still feel unprepared.”
+“We often meet people who’ve done everything right—but still hesitate.”
 These aren’t harsh—but they’re sharp. They start with truth, not fluff.
 
 Be specific and grounded. Avoid vague concepts like “clarity is key” or “make the most of your money.” Instead, explain what clarity looks like in real terms—e.g. fewer accounts, clear timelines, known trade-offs.
 Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
 Each idea should build on the one before it. Don’t just list thoughts—develop the insight.
+Use friction and consequence. Show what inaction really costs—whether it’s missed years, poor timing, or hidden complexity.
+Avoid circular phrasing. Each sentence should move the reader toward clarity.
 Aim for 1–2 sentences per idea. Vary rhythm: combine punchy lines with occasional longer reflections.
 Don’t summarise or conclude too early. Let the message unfold with direction and clarity.
 
@@ -117,6 +119,7 @@ Avoid filler, clichés, or soft statements like “clarity is key” or “you d
 Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
 Every line should deliver an insight, build tension, or offer a practical shift in thinking.
 Don’t repeat phrases unless it’s intentional for rhythm or contrast.
+
 Wrap up with a clear, useful action or reflection (even something small)
 Ending strength matters.
 Before the sign-off, include a final sentence that reconnects the reader’s reflection to the real-life consequence of delay or inaction.
