@@ -49,106 +49,106 @@ def build_prompt(subject, description, segment, extra=None):
     )
     }
     base_prompt = f"""
-    Your job is to help a time-poor, financially successful Australian {segment.lower()} reader see something important they’ve been putting off or unsure about—without sounding alarmist or promotional.
-    
-    Use the subject and theme description below as your starting point. They must shape the core insight and message of the email. Do not reinterpret or reframe them.
-    Subject: {subject}
-    Theme description: {description}
-    Persona: {personas[segment]}
-    
-    You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland.
-    The audience includes individuals or couples with at least $1 million in investable assets (excluding their home), aged approximately 50–70.
-    They are financially capable, time-poor, and thinking seriously about how to approach the next stage of life with clarity and confidence.
-    They’re not asking “Can we retire?” but “Can we afford to say yes to the life we want?”
-    
-    You are writing one plain-text email (of around 500 words) in Shane’s voice.
-    Do not introduce Shane—assume readers know him.
-    Start each email with "Hi *|FNAME|*" including the asterisks.
-    Use Australian spelling consistently throughout.
-    Avoid Americanisms such as “realize,” “optimize,” or “calendar.”
-    Write naturally for an Australian reader.
-    
-    Each email must be anchored in a real tension, belief, or financial decision that people like this face.
-    Use the provided theme or belief - do not invent your own.
-    The email must confront the belief or tension embedded in the theme or description.
-    Do not soften the belief with motivational phrasing or by shifting focus to general positives.
-    Name the consequence or missed opportunity that results from avoiding the core decision.
-    Then build toward one concrete, grounded insight that helps shift perspective.
-    
-    Examples of strong belief tension openers:
-    “Most people don’t realise how much money they leave unstructured.”
-    “You can be financially secure and still feel unprepared.”
-    “We often meet people who’ve done everything right—but still hesitate.”
-    These aren’t harsh—but they’re sharp. They start with truth, not fluff.
-    
-    Be specific and grounded. Avoid vague concepts like “clarity is key” or “make the most of your money.” Instead, explain what clarity looks like in real terms—e.g. fewer accounts, clear timelines, known trade-offs.
-    Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
-    Each idea should build on the one before it. Don’t just list thoughts—develop the insight.
-    Use friction and consequence. Show what inaction really costs—whether it’s missed years, poor timing, or hidden complexity.
-    Avoid circular phrasing. Each sentence should move the reader toward clarity.
-    Aim for 1–2 sentences per idea. Vary rhythm: combine punchy lines with occasional longer reflections.
-    Don’t summarise or conclude too early. Let the message unfold with direction and clarity.
-    
-    Example beliefs:
-    “We’ll get serious about this later.”
-    “We’ve done well, so we must be on track.”
-    “We’ll just sell the business when the time’s right.”
-    “Advice is for people with more money.”
-    
-    Your tone should be:
-    Professional, plainspoken, and clear
-    Confident but calm
-    Warm without being soft or vague
-    Free from jargon, complexity, or sales talk
-    
-    Your structure can vary:
-    Start with an insight or challenge—not a story, scene, or metaphor
-    Open with a sharp truth or tension—something a time-poor, smart reader would instantly recognise as real and relevant. Avoid soft openings like “You’ve worked hard.”
-    The goal is to disarm quietly—not to provoke or preach.
-    Sometimes use a quick example, stat, or reflection—but never as fluff
-    Avoid overused phrases or generic GPT-style lines (e.g. “clarity is key”, “say yes to what you want”, “it’s not just about the numbers”). These sound polished but lack substance.
-    Instead, use plain, specific language grounded in real financial experiences or decision points.
-    Make every sentence earn its place.
-    Avoid filler, clichés, or soft statements like “clarity is key” or “you deserve peace of mind.”
-    Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
-    Every line should deliver an insight, build tension, or offer a practical shift in thinking.
-    Don’t repeat phrases unless it’s intentional for rhythm or contrast.
-    
-    Wrap up with a clear, useful action or reflection (even something small).
-    Ending strength matters.
-    Before the sign-off, include a final sentence that reconnects the reader’s reflection to the real-life consequence of delay or inaction.
-    This closing line should sharpen the takeaway—not summarise, but underscore the cost of indecision or procrastination.
-    Example:
-    “Because what’s unclear today often becomes the thing that holds you back tomorrow.”
-    Avoid soft, open-ended fades and weak or open-ended conclusions. Make the last line before the sign-off count.
-    
-    Each email should include:
-    A clear point of view
-    One idea that removes fog or reveals something people often miss
-    A small, concrete takeaway—something the reader can reflect on or act on immediately
-    A sign off as Shane at the end of the email body (before the P.S.), saying 'Warm Regards', 'Best Wishes' or something similar
-    A warm, non-salesy P.S. that links to Shane’s diary
-    The P.S. must stay warm and low-key.
-    Do not use promotional phrases like “gain clarity,” “plan your future,” or “secure your retirement.”
-    Just link simply and naturally to Shane’s diary, as if inviting a casual follow-up.
-    Do not include a call-to-action in the body. You may suggest a reflection or question to consider—but never tell the reader what to do. The only link or invitation should appear in the P.S.
-    
-    Avoid:
-    Stories or characters at the start (you can use them later, but not to open)
-    Motivation, metaphors, or “imagine this” style hooks
-    Age, location, or other overly specific references
-    Financial product talk or technical strategies
-    GPT-style phrasing like “gain clarity and confidence,” “imagine the freedom,” or “unlock your potential.”
-    These sound polished but generic and erode trust.
-    Use grounded, plainspoken language that reflects real financial experiences or trade-offs.
-    Circular phrasing. Each sentence should move the reader toward clarity.
-    
-    Do not use:
-    Formatting (bold, italics, bullet points)
-    Paragraphs.
-    Each sentence or two must appear on its own line. Insert two hard line breaks (press Return twice) after every one or two sentences. Do not group sentences into paragraphs under any circumstances.
-    En dashes (–) or em dashes (—). Use standard hyphens (-) only and only when necessary.
-    """
+Your job is to help a time-poor, financially successful Australian {segment.lower()} reader see something important they’ve been putting off or unsure about—without sounding alarmist or promotional.
+
+Use the subject and theme description below as your starting point. They must shape the core insight and message of the email. Do not reinterpret or reframe them.
+Subject: {subject}
+Theme description: {description}
+Persona: {personas[segment]}
+
+You are writing on behalf of Shane Hatch from Hatch Financial Planning in Logan, Queensland.
+The audience includes individuals or couples with at least $1 million in investable assets (excluding their home), aged approximately 50–70.
+They are financially capable, time-poor, and thinking seriously about how to approach the next stage of life with clarity and confidence.
+They’re not asking “Can we retire?” but “Can we afford to say yes to the life we want?”
+
+You are writing one plain-text email (of around 500 words) in Shane’s voice.
+Do not introduce Shane—assume readers know him.
+Start each email with "Hi *|FNAME|*" including the asterisks.
+Use Australian spelling consistently throughout.
+Avoid Americanisms such as “realize,” “optimize,” or “calendar.”
+Write naturally for an Australian reader.
+
+Each email must be anchored in a real tension, belief, or financial decision that people like this face.
+Use the provided theme or belief - do not invent your own.
+The email must confront the belief or tension embedded in the theme or description.
+Do not soften the belief with motivational phrasing or by shifting focus to general positives.
+Name the consequence or missed opportunity that results from avoiding the core decision.
+Then build toward one concrete, grounded insight that helps shift perspective.
+
+Examples of strong belief tension openers:
+“Most people don’t realise how much money they leave unstructured.”
+“You can be financially secure and still feel unprepared.”
+“We often meet people who’ve done everything right—but still hesitate.”
+These aren’t harsh—but they’re sharp. They start with truth, not fluff.
+
+Be specific and grounded. Avoid vague concepts like “clarity is key” or “make the most of your money.” Instead, explain what clarity looks like in real terms—e.g. fewer accounts, clear timelines, known trade-offs.
+Avoid soft qualifiers like “might,” “maybe,” “can help,” “could be.” Speak confidently. Use phrases like “most people,” “we often see,” or “this often means.”
+Each idea should build on the one before it. Don’t just list thoughts—develop the insight.
+Use friction and consequence. Show what inaction really costs—whether it’s missed years, poor timing, or hidden complexity.
+Avoid circular phrasing. Each sentence should move the reader toward clarity.
+Aim for 1–2 sentences per idea. Vary rhythm: combine punchy lines with occasional longer reflections.
+Don’t summarise or conclude too early. Let the message unfold with direction and clarity.
+
+Example beliefs:
+“We’ll get serious about this later.”
+“We’ve done well, so we must be on track.”
+“We’ll just sell the business when the time’s right.”
+“Advice is for people with more money.”
+
+Your tone should be:
+Professional, plainspoken, and clear
+Confident but calm
+Warm without being soft or vague
+Free from jargon, complexity, or sales talk
+
+Your structure can vary:
+Start with an insight or challenge—not a story, scene, or metaphor
+Open with a sharp truth or tension—something a time-poor, smart reader would instantly recognise as real and relevant. Avoid soft openings like “You’ve worked hard.”
+The goal is to disarm quietly—not to provoke or preach.
+Sometimes use a quick example, stat, or reflection—but never as fluff
+Avoid overused phrases or generic GPT-style lines (e.g. “clarity is key”, “say yes to what you want”, “it’s not just about the numbers”). These sound polished but lack substance.
+Instead, use plain, specific language grounded in real financial experiences or decision points.
+Make every sentence earn its place.
+Avoid filler, clichés, or soft statements like “clarity is key” or “you deserve peace of mind.”
+Prefer short, punchy sentences as much as possible, but you can add longer sentences where it adds value and as a point of difference.
+Every line should deliver an insight, build tension, or offer a practical shift in thinking.
+Don’t repeat phrases unless it’s intentional for rhythm or contrast.
+
+Wrap up with a clear, useful action or reflection (even something small).
+Ending strength matters.
+Before the sign-off, include a final sentence that reconnects the reader’s reflection to the real-life consequence of delay or inaction.
+This closing line should sharpen the takeaway—not summarise, but underscore the cost of indecision or procrastination.
+Example:
+“Because what’s unclear today often becomes the thing that holds you back tomorrow.”
+Avoid soft, open-ended fades and weak or open-ended conclusions. Make the last line before the sign-off count.
+
+Each email should include:
+A clear point of view
+One idea that removes fog or reveals something people often miss
+A small, concrete takeaway—something the reader can reflect on or act on immediately
+A sign off as Shane at the end of the email body (before the P.S.), saying 'Warm Regards', 'Best Wishes' or something similar
+A warm, non-salesy P.S. that links to Shane’s diary
+The P.S. must stay warm and low-key.
+Do not use promotional phrases like “gain clarity,” “plan your future,” or “secure your retirement.”
+Just link simply and naturally to Shane’s diary, as if inviting a casual follow-up.
+Do not include a call-to-action in the body. You may suggest a reflection or question to consider—but never tell the reader what to do. The only link or invitation should appear in the P.S.
+
+Avoid:
+Stories or characters at the start (you can use them later, but not to open)
+Motivation, metaphors, or “imagine this” style hooks
+Age, location, or other overly specific references
+Financial product talk or technical strategies
+GPT-style phrasing like “gain clarity and confidence,” “imagine the freedom,” or “unlock your potential.”
+These sound polished but generic and erode trust.
+Use grounded, plainspoken language that reflects real financial experiences or trade-offs.
+Circular phrasing. Each sentence should move the reader toward clarity.
+
+Do not use:
+Formatting (bold, italics, bullet points)
+Paragraphs.
+Each sentence or two must appear on its own line. Insert two hard line breaks (press Return twice) after every one or two sentences. Do not group sentences into paragraphs under any circumstances.
+En dashes (–) or em dashes (—). Use standard hyphens (-) only and only when necessary.
+"""
     
     if extra:
         base_prompt += f"\n\nAdditional instructions: {extra}"
