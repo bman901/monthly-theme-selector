@@ -413,7 +413,8 @@ for segment in ["Pre-Retiree", "Retiree"]:
 
                 with colD:
                     if st.button("➕ Recent Study", key=f"study_{segment}"):
-                        st.session_state[f"extra_prompt_{segment}"] += "\nReference a recent study"
+                        st.session_state[f"extra_prompt_{segment}"] += "\nReference a recent study. Do not fabricate data or statistics. Only include references to studies or findings that are plausible and widely reported. Avoid citing exact figures (e.g. “63%”) unless you are confident they are accurate and well-established.
+Prefer general phrasing such as “A recent study found…” or “Surveys often show…” Do not mention the reader’s demographic, age, or personal situation—keep the reference broad and relevant to the theme. If you can’t confidently cite a known study, imply a trend without stating specific details."
                 
                 colE, colF, colG = st.columns(3)
                 with colE:
