@@ -402,17 +402,17 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 with colA:
                     if st.button("➕ Direct Insight", key=f"insight_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: direct insight"
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 with colB:
                     if st.button("➕ Story", key=f"story_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: story"
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 with colC:
                     if st.button("➕ Exercise", key=f"exercise_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: exercise"
-                        st.experimental_rerun()
+                        st.rerun()
 
                 with colD:
                     if st.button("➕ Recent Study", key=f"study_{segment}"):
@@ -420,23 +420,23 @@ for segment in ["Pre-Retiree", "Retiree"]:
 Do not fabricate data or statistics. Only include references to studies or findings that are plausible and widely reported.
 Avoid citing exact figures (e.g. “63%”) unless you are confident they are accurate and well-established.
 Prefer general phrasing such as “A recent study found…” or “Surveys often show…” Do not mention the reader’s demographic, age, or personal situation—keep the reference broad and relevant to the theme. If you can’t confidently cite a known study, imply a trend without stating specific details."""
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 colE, colF, colG, colH = st.columns(4)
                 with colE:
                     if st.button("➕ Myth Buster", key=f"myth_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: myth buster"
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 with colF:
                     if st.button("➕ Case Study", key=f"case_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: case study"
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 with colG:
                     if st.button("➕ Q&A", key=f"qa_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: Q&A"
-                        st.experimental_rerun()
+                        st.rerun()
 
                 if st.button(f"🔁 Re-generate with prompt for {segment}", key=f"regen_{segment}"):
                     full_prompt = build_prompt(
