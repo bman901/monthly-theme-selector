@@ -398,7 +398,7 @@ for segment in ["Pre-Retiree", "Retiree"]:
                     value=st.session_state[f"extra_prompt_{segment}"],
                     key=f"prompt_box_{segment}"
                 )
-                colA, colB, colC = st.columns(3)
+                colA, colB, colC, colD = st.columns(4)
                 with colA:
                     if st.button("➕ Direct Insight", key=f"insight_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: direct insight"
@@ -410,17 +410,21 @@ for segment in ["Pre-Retiree", "Retiree"]:
                 with colC:
                     if st.button("➕ Exercise", key=f"exercise_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: exercise"
-                
-                colD, colE, colF = st.columns(3)
+
                 with colD:
+                    if st.button("➕ Recent Study", key=f"study_{segment}"):
+                        st.session_state[f"extra_prompt_{segment}"] += "\nReference a recent study"
+                
+                colE, colF, colG = st.columns(3)
+                with colE:
                     if st.button("➕ Myth Buster", key=f"myth_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: myth buster"
                 
-                with colE:
+                with colF:
                     if st.button("➕ Case Study", key=f"case_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: case study"
                 
-                with colF:
+                with colG:
                     if st.button("➕ Q&A", key=f"qa_{segment}"):
                         st.session_state[f"extra_prompt_{segment}"] += "\nFormat: Q&A"
 
