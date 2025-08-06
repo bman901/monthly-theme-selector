@@ -307,7 +307,7 @@ def create_mailchimp_campaign(subject, draft, segment, preview_text=None):
         else st.secrets["MAILCHIMP_TAG_ID_RETIREES"]
     )
 
-    base_url = f"https://{dc}.api.mailchimp.com/3.0"
+    base_url = f"https://{server_prefix}.api.mailchimp.com/3.0"
     auth = ("anystring", api_key)
 
     campaign_data = {
