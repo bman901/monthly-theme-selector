@@ -493,6 +493,7 @@ Prefer general phrasing such as “A recent study found…” or “Surveys ofte
             update_airtable_fields(selected["id"], {"DraftApproved": True})
             send_approval_notification_to_ben(fields["Subject"])
             st.success("Draft marked as approved and notification sent.")
+            st.rerun()
 
     elif skipped:
         st.info("You’ve opted not to send a campaign this month.")
